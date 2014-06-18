@@ -27,15 +27,15 @@
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <AsfFrameworkConfig>
       <framework-data>
-  <options />
-  <configurations />
-  <files />
-  <documentation help="" />
-  <offline-documentation help="" />
-  <dependencies>
-    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.3.0" />
-  </dependencies>
-</framework-data>
+        <options />
+        <configurations />
+        <files />
+        <documentation help="" />
+        <offline-documentation help="" />
+        <dependencies>
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.3.0" />
+        </dependencies>
+      </framework-data>
     </AsfFrameworkConfig>
     <avrtool>com.atmel.avrdbg.tool.simulator</avrtool>
     <com_atmel_avrdbg_tool_simulator>
@@ -155,7 +155,94 @@
     <PostBuildEvent>%ARDUINO_HOME%\hardware\tools\avr\bin\avrdude.exe -C%ARDUINO_HOME%\hardware\tools\avr\etc\avrdude.conf -patmega328p -carduino -P\\.\COM1 -b115200 -Uflash:w:"$(Name).hex":i</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Main.cpp">
+    <Compile Include="lib\dht.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lib\dht.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\AuxiliarModule.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\AuxiliarModule.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\CommunicationModule.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\CommunicationModule.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Definitions.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\DhtSensor.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\DhtSensor.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\EventModule.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\EventModule.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Light.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Light.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Lock.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Lock.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\LoginTable.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\LoginTable.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Main.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\MainModule.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\MainModule.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\RequestModule.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\RequestModule.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\SecurityModule.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\SecurityModule.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\StateModule.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\StateModule.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\UserModule.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\UserModule.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\UserTable.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\UserTable.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
@@ -170,6 +257,10 @@
       <Project>{c7777fc5-739f-4c01-82f1-9bf79646f9c6}</Project>
       <Private>True</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="lib" />
+    <Folder Include="src" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
