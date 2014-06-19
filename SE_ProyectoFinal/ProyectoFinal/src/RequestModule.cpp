@@ -47,6 +47,11 @@ void RequestModule::serveRequest(Request request, Input input[INPUT_MAX_COUNT]) 
         break;
     }
 
+    case REQUEST_USERS : {
+        requestUsers();
+        break;
+    }
+
     case TOGGLE_LIGHT : {
         toggleLight();
         break;
@@ -138,6 +143,15 @@ void RequestModule::requestState() {
 
     // Sends a success response with the information of the state of the system
     CommunicationModule::sendRequestStateResponse(lock_parameter, light_parameter, temperature, humidity);
+}
+
+void RequestModule::requestUsers() {
+    // Gets the usernames of the users of the system
+    Username usernames[USER_TABLE_CAPACITY];
+    int user_count = UserModule::getUserUsernames(usernames);
+
+    // Sends a success response with the usernames
+    CommunicationModule::sendRequestUsersResponse(user_count, usernames);
 }
 
 void RequestModule::toggleLight() {

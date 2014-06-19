@@ -26,6 +26,17 @@ UserTableEntry *UserTable::getEntry(Username username) {
     return &entries[index];
 }
 
+int UserTable::getUserUsernames(Username usernames[USER_TABLE_CAPACITY]) {
+    int user_count = 0;
+
+    forn (i, length)
+    if (entries[i].role != ADMIN)
+        // The user is not an administrator
+        usernames[user_count++] = entries[i].username;
+
+    return user_count;
+}
+
 bool UserTable::isFull() {
     return length == USER_TABLE_CAPACITY;
 }

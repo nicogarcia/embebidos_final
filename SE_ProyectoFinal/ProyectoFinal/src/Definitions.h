@@ -64,8 +64,9 @@ enum Requests {
     REFRESH_TTL = 3,
     REMOVE_USER = 4,
     REQUEST_STATE = 5,
-    TOGGLE_LIGHT = 6,
-    TOGGLE_LOCK = 7
+    REQUEST_USERS = 6,
+    TOGGLE_LIGHT = 7,
+    TOGGLE_LOCK = 8
 };
 
 enum Responses {

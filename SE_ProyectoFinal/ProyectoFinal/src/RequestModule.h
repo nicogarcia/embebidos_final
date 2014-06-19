@@ -13,6 +13,7 @@ private:
     static void refreshTtl(Username username);
     static void removeUser(Username username);
     static void requestState();
+    static void requestUsers();
     static void toggleLight();
     static void toggleLock();
     static bool validateInput(Request request, Input input[INPUT_MAX_COUNT]);

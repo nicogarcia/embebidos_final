@@ -58,6 +58,26 @@ void CommunicationModule::sendRequestStateResponse(Parameter lock_parameter, Par
     sendMessage(message);
 }
 
+void CommunicationModule::sendRequestUsersResponse(int user_count, Username usernames[USER_TABLE_CAPACITY]) {
+    // Response
+    Response response = SUCCESS;
+
+    // Builds the message
+    String message = "";
+    message += MESSAGE_BEGIN;
+    message += response;
+    message += MESSAGE_PARAMETERS_SEPARATOR;
+    message += user_count;
+    forn (i, user_count) {
+        message += MESSAGE_PARAMETERS_SEPARATOR;
+        message += usernames[i];
+    }
+    message += MESSAGE_END;
+
+    // Sends the message
+    sendMessage(message);
+}
+
 void CommunicationModule::sendSuccessResponse() {
     // Response
     Response response = SUCCESS;

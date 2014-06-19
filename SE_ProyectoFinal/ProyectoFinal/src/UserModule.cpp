@@ -30,6 +30,10 @@ Role UserModule::getUserRole(Username username) {
     return UserTable::getEntry(username)->role;
 }
 
+int UserModule::getUserUsernames(Username usernames[USER_TABLE_CAPACITY]) {
+    return UserTable::getUserUsernames(usernames);
+}
+
 bool UserModule::isLoginTableFull() {
     return LoginTable::isFull();
 }
