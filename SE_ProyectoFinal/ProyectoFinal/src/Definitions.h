@@ -100,6 +100,8 @@ static const char MESSAGE_END = '*';
 
 static const uint8_t DHT_SENSOR_PIN = 2;
 
+static const int BAUD_RATE = 9600;
+
 static const Humidity HUMIDITY_UNKNOWN = -1;
 static const Temperature TEMPERATURE_UNKNOWN = 0;
 

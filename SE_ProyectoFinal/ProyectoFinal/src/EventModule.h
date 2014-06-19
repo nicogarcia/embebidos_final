@@ -6,7 +6,7 @@
 class EventModule {
 public:
     static void checkEvent();
-    static void initialize();
+    static void initializeSystem();
 private:
     static Event current_event;
     static Time event_times[EVENT_COUNT];
