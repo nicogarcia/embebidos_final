@@ -11,6 +11,7 @@ private:
     static Event current_event;
     static Time event_times[EVENT_COUNT];
     static void dhtMeasurementEvent();
+    static void lightIntensityMeasurementEvent();
     static void ttlExpirationEvent();
     static void debugEvent(); // TODO: remove this
 };

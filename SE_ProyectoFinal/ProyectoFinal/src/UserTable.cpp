@@ -15,6 +15,10 @@ void UserTable::addEntry(Username username, Password password, Role role) {
     length++;
 }
 
+UserTableEntry *UserTable::getEntries() {
+    return entries;
+}
+
 UserTableEntry *UserTable::getEntry(Username username) {
     // Searches for the entry index
     int index = getEntryIndex(username);
@@ -24,33 +28,6 @@ UserTableEntry *UserTable::getEntry(Username username) {
         return NULL;
 
     return &entries[index];
-}
-
-int UserTable::getUserUsernames(Username usernames[USER_TABLE_CAPACITY]) {
-    int user_count = 0;
-
-    forn (i, length)
-    if (entries[i].role != ADMIN)
-        // The user is not an administrator
-        usernames[user_count++] = entries[i].username;
-
-    return user_count;
-}
-
-bool UserTable::isFull() {
-    return length == USER_TABLE_CAPACITY;
-}
-
-void UserTable::removeEntry(Username username) {
-    // Searches for the entry index
-    int index = getEntryIndex(username);
-
-    if (index < 0)
-        // The entry has not been found
-        return;
-
-    // Actually removes the entry
-    removeEntry(index);
 }
 
 int UserTable::getEntryIndex(Username username) {
@@ -64,10 +41,30 @@ int UserTable::getEntryIndex(Username username) {
     return -1;
 }
 
+int UserTable::getLength() {
+    return length;
+}
+
+bool UserTable::isFull() {
+    return length == USER_TABLE_CAPACITY;
+}
+
 void UserTable::removeEntry(int index) {
     // Shifts the remaining entries one position back
     forsn (i, index + 1, length)
     entries[i - 1] = entries[i];
 
     length--;
+}
+
+void UserTable::removeEntry(Username username) {
+    // Searches for the entry index
+    int index = getEntryIndex(username);
+
+    if (index < 0)
+        // The entry has not been found
+        return;
+
+    // Actually removes the entry
+    removeEntry(index);
 }

@@ -13,7 +13,15 @@ bool UserModule::authenticateUser(Username username, Password password) {
 }
 
 void UserModule::autoLogout() {
-    LoginTable::removeExpiredEntries();
+    // Gets the login table entries
+    LoginTableEntry *entries = LoginTable::getEntries();
+
+    forn (i, LoginTable::getLength())
+    if (entries[i].ttl <= 0) {
+        // The entry has expired
+        LoginTable::removeEntry(i);
+        i--; // The next index to check is the same of the entry that was removed
+    }
 }
 
 void UserModule::changeUserPassword(Username username, Password password) {
@@ -23,7 +31,13 @@ void UserModule::changeUserPassword(Username username, Password password) {
 }
 
 void UserModule::decrementTtls() {
-    LoginTable::decrementTtls();
+    // Gets the login table length and entries
+    int length = LoginTable::getLength();
+    LoginTableEntry *entries = LoginTable::getEntries();
+
+    // Decrements the TTLs
+    forn (i, length)
+    entries[i].ttl--;
 }
 
 Role UserModule::getUserRole(Username username) {
@@ -31,7 +45,18 @@ Role UserModule::getUserRole(Username username) {
 }
 
 int UserModule::getUserUsernames(Username usernames[USER_TABLE_CAPACITY]) {
-    return UserTable::getUserUsernames(usernames);
+    int user_count = 0;
+
+    // Gets the user table length and entries
+    int length = UserTable::getLength();
+    UserTableEntry *entries = UserTable::getEntries();
+
+    forn (i, length)
+    if (entries[i].role != ADMIN)
+        // The user is not an administrator
+        usernames[user_count++] = entries[i].username;
+
+    return user_count;
 }
 
 bool UserModule::isLoginTableFull() {

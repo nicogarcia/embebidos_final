@@ -16,6 +16,7 @@ typedef int Ttl;
 
 typedef unsigned long int Time;
 
+typedef int LightIntensity; // TODO: is it an int?
 typedef int Humidity;
 typedef int Temperature;
 
@@ -37,6 +38,7 @@ typedef struct {
 enum Events {
     // The order of the elements is important
     DHT_MEASUREMENT,
+    LIGHT_INTENSITY_MEASUREMENT,
     TTL_EXPIRATION,
     DEBUG_EVENT, // TODO: remove this event
     EVENT_COUNT // This element should always be kept in the last position
@@ -44,8 +46,8 @@ enum Events {
 
 enum Parameters {
     INVALID_INPUT = 0,
-    LIGHT_OFF = 1,
-    LIGHT_ON = 2,
+    LIGHT_DISABLED = 1,
+    LIGHT_ENABLED = 2,
     LOCK_CLOSED = 3,
     LOCK_OPENED = 4,
     LOGGED_IN = 5,
@@ -97,10 +99,13 @@ static const char MESSAGE_END = '*';
 
 static const uint8_t DHT_SENSOR_PIN = 2;
 
+static const LightIntensity LIGHT_INTENSITY_THRESHOLD = 512; // TODO: calibrate this
+
 static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
     // Milliseconds
     // The order of the elements is important
     2000, // DHT_MEASUREMENT
+    1000, // LIGHT_INTENSITY_MEASUREMENT
     5000, // TTL_EXPIRATION
     2000 // TODO: remove this
 };
@@ -110,6 +115,7 @@ static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
 #include "DhtSensor.h"
 #include "EventModule.h"
 #include "Light.h"
+#include "LightSensor.h"
 #include "Lock.h"
 #include "LoginTable.h"
 #include "MainModule.h"

@@ -137,7 +137,7 @@ void RequestModule::removeUser(Username username) {
 void RequestModule::requestState() {
     // Gets the information of the state of the system
     Parameter lock_parameter = StateModule::isLockClosed() ? LOCK_CLOSED : LOCK_OPENED;
-    Parameter light_parameter = StateModule::isLightOff() ? LIGHT_OFF : LIGHT_ON;
+    Parameter light_parameter = StateModule::isLightDisabled() ? LIGHT_DISABLED : LIGHT_ENABLED;
     Temperature temperature = StateModule::getTemperature();
     Humidity humidity = StateModule::getHumidity();
 
@@ -155,7 +155,7 @@ void RequestModule::requestUsers() {
 }
 
 void RequestModule::toggleLight() {
-    // Turns on/off the light
+    // Disables/enables the light
     StateModule::toggleLight();
 
     // Sends a success response
@@ -163,7 +163,7 @@ void RequestModule::toggleLight() {
 }
 
 void RequestModule::toggleLock() {
-    // Opens/closes the lock
+    // Closes/opens the lock
     StateModule::toggleLock();
 
     // Sends a success response

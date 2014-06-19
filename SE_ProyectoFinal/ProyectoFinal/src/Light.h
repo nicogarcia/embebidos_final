@@ -5,11 +5,15 @@
 
 class Light {
 public:
-	static bool isOff();
-	static void turnOff();
-	static void turnOn();
+    static void disable();
+    static void enable();
+    static bool isDisabled();
+    static bool isOff();
+    static void turnOff();
+    static void turnOn();
 private:
-	static bool is_off;
+    static bool is_disabled;
+    static bool is_off;
 };
 
 #endif /* LIGHT */

@@ -194,6 +194,12 @@
     <Compile Include="src\Light.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\LightSensor.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\LightSensor.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\Lock.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -204,9 +210,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\LoginTable.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\Main.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\MainModule.cpp">

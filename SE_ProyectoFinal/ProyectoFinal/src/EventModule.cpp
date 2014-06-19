@@ -20,6 +20,11 @@ void EventModule::checkEvent() {
             break;
         }
 
+        case LIGHT_INTENSITY_MEASUREMENT : {
+            lightIntensityMeasurementEvent();
+            break;
+        }
+
         case TTL_EXPIRATION : {
             ttlExpirationEvent();
             break;
@@ -46,7 +51,29 @@ void EventModule::initialize() {
 }
 
 void EventModule::dhtMeasurementEvent() {
-    StateModule::measureHumidityAndTemperature();
+    // Measures the temperature and humidity
+    StateModule::measureTemperatureAndHumidity();
+}
+
+void EventModule::lightIntensityMeasurementEvent() {
+    // TODO: what to do
+
+    // Measures the light intensity
+    StateModule::measureLightIntensity();
+
+    if (! StateModule::isLightDisabled()) {
+        // Light is enabled
+
+        // Gets the light intensity
+        LightIntensity light_intensity = StateModule::getLightIntensity();
+
+        if (light_intensity < LIGHT_INTENSITY_THRESHOLD)
+            // The environment is too dark
+            StateModule::turnOnLight();
+        else
+            // The environment is iluminated
+            StateModule::turnOffLight();
+    }
 }
 
 void EventModule::ttlExpirationEvent() {
