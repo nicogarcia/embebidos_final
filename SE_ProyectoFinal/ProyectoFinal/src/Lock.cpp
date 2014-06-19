@@ -1,12 +1,11 @@
 #include "Lock.h"
 
-bool Lock::is_closed = true;
+bool Lock::is_closed;
 
 void Lock::close() {
     is_closed = true;
 
     // TODO: actually close the lock
-    Serial.println("close");
 }
 
 bool Lock::isClosed() {
@@ -17,5 +16,4 @@ void Lock::open() {
     is_closed = false;
 
     // TODO: actually open the lock
-    Serial.println("open");
 }

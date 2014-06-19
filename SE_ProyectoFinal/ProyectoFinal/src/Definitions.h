@@ -8,21 +8,20 @@
 #define forsn(i, s, n) for (int i = (int) (s); i < (int) (n); ++i)
 
 typedef int Event;
+typedef int Humidity;
+typedef int LightIntensity;
 typedef int Parameter;
 typedef int Request;
 typedef int Response;
 typedef int Role;
+typedef int Temperature;
 typedef int Ttl;
 
 typedef unsigned long int Time;
 
-typedef int LightIntensity; // TODO: is it an int?
-typedef int Humidity;
-typedef int Temperature;
-
 typedef String Input;
-typedef String Username;
 typedef String Password;
+typedef String Username;
 
 typedef struct {
     Username username;
@@ -40,7 +39,6 @@ enum Events {
     DHT_MEASUREMENT,
     LIGHT_INTENSITY_MEASUREMENT,
     TTL_EXPIRATION,
-    DEBUG_EVENT, // TODO: remove this event
     EVENT_COUNT // This element should always be kept in the last position
 };
 
@@ -48,27 +46,30 @@ enum Parameters {
     INVALID_INPUT = 0,
     LIGHT_DISABLED = 1,
     LIGHT_ENABLED = 2,
-    LOCK_CLOSED = 3,
-    LOCK_OPENED = 4,
-    LOGGED_IN = 5,
-    LOGIN_TABLE_FULL = 6,
-    NOT_LOGGED_IN = 7,
-    UNAUTHORIZED = 8,
-    USER_ALREADY_EXISTS = 9,
-    USER_NOT_FOUND = 10,
-    USER_TABLE_FULL = 11
+    LIGHT_OFF = 3,
+    LIGHT_ON = 4,
+    LOCK_CLOSED = 5,
+    LOCK_OPENED = 6,
+    LOGGED_IN = 7,
+    LOGIN_TABLE_FULL = 8,
+    NOT_LOGGED_IN = 9,
+    UNAUTHORIZED = 10,
+    USER_ALREADY_EXISTS = 11,
+    USER_NOT_FOUND = 12,
+    USER_TABLE_FULL = 13
 };
 
 enum Requests {
     ADD_USER = 0,
     CHANGE_PASSWORD = 1,
     LOGIN = 2,
-    REFRESH_TTL = 3,
-    REMOVE_USER = 4,
-    REQUEST_STATE = 5,
-    REQUEST_USERS = 6,
-    TOGGLE_LIGHT = 7,
-    TOGGLE_LOCK = 8
+    LOGOUT = 3,
+    REFRESH_TTL = 4,
+    REMOVE_USER = 5,
+    REQUEST_STATE = 6,
+    REQUEST_USERS = 7,
+    TOGGLE_LIGHT = 8,
+    TOGGLE_LOCK = 9
 };
 
 enum Responses {
@@ -99,6 +100,9 @@ static const char MESSAGE_END = '*';
 
 static const uint8_t DHT_SENSOR_PIN = 2;
 
+static const Humidity HUMIDITY_UNKNOWN = -1;
+static const Temperature TEMPERATURE_UNKNOWN = 0;
+
 static const LightIntensity LIGHT_INTENSITY_THRESHOLD = 512; // TODO: calibrate this
 
 static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
@@ -106,8 +110,7 @@ static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
     // The order of the elements is important
     2000, // DHT_MEASUREMENT
     1000, // LIGHT_INTENSITY_MEASUREMENT
-    5000, // TTL_EXPIRATION
-    2000 // TODO: remove this
+    5000 // TTL_EXPIRATION
 };
 
 #include "AuxiliarModule.h"

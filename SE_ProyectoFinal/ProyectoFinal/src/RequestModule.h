@@ -10,6 +10,7 @@ private:
     static void addUser(Username username, Password password);
     static void changePassword(Username username, Password password);
     static void login(Username username, Password password);
+    static void logout(Username username);
     static void refreshTtl(Username username);
     static void removeUser(Username username);
     static void requestState();

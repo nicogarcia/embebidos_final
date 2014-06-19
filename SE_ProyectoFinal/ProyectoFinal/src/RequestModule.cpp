@@ -32,6 +32,11 @@ void RequestModule::serveRequest(Request request, Input input[INPUT_MAX_COUNT]) 
         break;
     }
 
+    case LOGOUT : {
+        logout(input[0]);
+        break;
+    }
+
     case REFRESH_TTL : {
         refreshTtl(input[0]);
         break;
@@ -112,6 +117,14 @@ void RequestModule::login(Username username, Password password) {
     CommunicationModule::sendLoginResponse(logged_in_parameter);
 }
 
+void RequestModule::logout(Username username) {
+    // The user is logged out
+    UserModule::logoutUser(username);
+
+    // Sends a success response
+    CommunicationModule::sendSuccessResponse();
+}
+
 void RequestModule::refreshTtl(Username username) {
     // Refreshes the user TTL
     UserModule::refreshUserTtl(username);
@@ -136,13 +149,14 @@ void RequestModule::removeUser(Username username) {
 
 void RequestModule::requestState() {
     // Gets the information of the state of the system
-    Parameter lock_parameter = StateModule::isLockClosed() ? LOCK_CLOSED : LOCK_OPENED;
-    Parameter light_parameter = StateModule::isLightDisabled() ? LIGHT_DISABLED : LIGHT_ENABLED;
+    Parameter lock_closed_parameter = StateModule::isLockClosed() ? LOCK_CLOSED : LOCK_OPENED;
+    Parameter light_off_parameter = StateModule::isLightOff() ? LIGHT_OFF : LIGHT_ON;
+    Parameter light_disabled_parameter = StateModule::isLightDisabled() ? LIGHT_DISABLED : LIGHT_ENABLED;
     Temperature temperature = StateModule::getTemperature();
     Humidity humidity = StateModule::getHumidity();
 
     // Sends a success response with the information of the state of the system
-    CommunicationModule::sendRequestStateResponse(lock_parameter, light_parameter, temperature, humidity);
+    CommunicationModule::sendRequestStateResponse(lock_closed_parameter, light_off_parameter, light_disabled_parameter, temperature, humidity);
 }
 
 void RequestModule::requestUsers() {
@@ -155,7 +169,7 @@ void RequestModule::requestUsers() {
 }
 
 void RequestModule::toggleLight() {
-    // Disables/enables the light
+    // Disables / enables the light
     StateModule::toggleLight();
 
     // Sends a success response
@@ -163,7 +177,7 @@ void RequestModule::toggleLight() {
 }
 
 void RequestModule::toggleLock() {
-    // Closes/opens the lock
+    // Closes / opens the lock
     StateModule::toggleLock();
 
     // Sends a success response
@@ -176,6 +190,14 @@ bool RequestModule::validateInput(Request request, Input input[INPUT_MAX_COUNT])
         return false;
 
     switch (request) {
+    case LOGOUT :
+    case REFRESH_TTL :
+    case REQUEST_STATE :
+    case REQUEST_USERS :
+    case TOGGLE_LIGHT :
+    case TOGGLE_LOCK :
+        return true;
+
     case ADD_USER : {
         if (! AuxiliarModule::isValidUsername(input[1]))
             return false;

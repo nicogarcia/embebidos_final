@@ -36,7 +36,7 @@ void CommunicationModule::sendLoginResponse(Parameter logged_in_parameter) {
     sendMessage(message);
 }
 
-void CommunicationModule::sendRequestStateResponse(Parameter lock_parameter, Parameter light_parameter, Temperature temperature, Humidity humidity) {
+void CommunicationModule::sendRequestStateResponse(Parameter lock_closed_parameter, Parameter light_off_parameter, Parameter light_disabled_parameter, Temperature temperature, Humidity humidity) {
     // Response
     Response response = SUCCESS;
 
@@ -45,9 +45,11 @@ void CommunicationModule::sendRequestStateResponse(Parameter lock_parameter, Par
     message += MESSAGE_BEGIN;
     message += response;
     message += MESSAGE_PARAMETERS_SEPARATOR;
-    message += lock_parameter;
+    message += lock_closed_parameter;
     message += MESSAGE_PARAMETERS_SEPARATOR;
-    message += light_parameter;
+    message += light_off_parameter;
+    message += MESSAGE_PARAMETERS_SEPARATOR;
+    message += light_disabled_parameter;
     message += MESSAGE_PARAMETERS_SEPARATOR;
     message += temperature;
     message += MESSAGE_PARAMETERS_SEPARATOR;
@@ -94,5 +96,5 @@ void CommunicationModule::sendSuccessResponse() {
 
 void CommunicationModule::sendMessage(String message) {
     // TODO: actually send the message (Serial)
-    Serial.println("sendMessage");
+    Serial.println(message);
 }

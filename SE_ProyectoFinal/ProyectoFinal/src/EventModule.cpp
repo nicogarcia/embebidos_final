@@ -29,12 +29,6 @@ void EventModule::checkEvent() {
             ttlExpirationEvent();
             break;
         }
-
-        // TODO: remove this
-        case DEBUG_EVENT : {
-            debugEvent();
-            break;
-        }
         }
 
         // Sets the current time as the current event time
@@ -56,8 +50,6 @@ void EventModule::dhtMeasurementEvent() {
 }
 
 void EventModule::lightIntensityMeasurementEvent() {
-    // TODO: what to do
-
     // Measures the light intensity
     StateModule::measureLightIntensity();
 
@@ -78,15 +70,8 @@ void EventModule::lightIntensityMeasurementEvent() {
 
 void EventModule::ttlExpirationEvent() {
     // Removes users whose TTLs have expired
-    UserModule::autoLogout();
+    UserModule::autoLogoutUsers();
 
     // Decrements the TTLs of the remaining users
-    UserModule::decrementTtls();
-}
-
-// TODO: remove this
-void EventModule::debugEvent() {
-    Serial.println("------");
-    Serial.println("T: " + String(StateModule::getTemperature()));
-    Serial.println("H: " + String(StateModule::getHumidity()));
+    UserModule::decrementUserTtls();
 }

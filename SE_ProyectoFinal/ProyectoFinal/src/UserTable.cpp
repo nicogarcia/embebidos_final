@@ -50,6 +50,10 @@ bool UserTable::isFull() {
 }
 
 void UserTable::removeEntry(int index) {
+    if (index < 0 || index >= USER_TABLE_CAPACITY)
+        // Invalid index
+        return;
+
     // Shifts the remaining entries one position back
     forsn (i, index + 1, length)
     entries[i - 1] = entries[i];

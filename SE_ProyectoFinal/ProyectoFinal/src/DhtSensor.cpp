@@ -1,8 +1,8 @@
 #include "DhtSensor.h"
 
 dht DhtSensor::sensor;
-Humidity DhtSensor::humidity = 0; // TODO: what default value should be used?
-Temperature DhtSensor::temperature = 0;
+Humidity DhtSensor::humidity;
+Temperature DhtSensor::temperature;
 
 Humidity DhtSensor::getHumidity() {
     return humidity;
@@ -22,8 +22,7 @@ void DhtSensor::measure() {
         temperature = (Temperature) sensor.temperature;
     } else {
         // There was a problem with the measurement
-        // TODO: what default value should be used?
-        humidity = 0;
-        temperature = 0;
+        humidity = HUMIDITY_UNKNOWN;
+        temperature = TEMPERATURE_UNKNOWN;
     }
 }

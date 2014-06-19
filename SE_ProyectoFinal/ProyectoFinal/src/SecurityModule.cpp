@@ -15,6 +15,7 @@ bool SecurityModule::authorizeRequest(Request request, Input input[INPUT_MAX_COU
 
     switch (request) {
     case CHANGE_PASSWORD :
+    case LOGOUT :
     case REFRESH_TTL :
     case REQUEST_STATE :
     case TOGGLE_LIGHT :

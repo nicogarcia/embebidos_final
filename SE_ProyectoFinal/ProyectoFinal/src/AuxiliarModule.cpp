@@ -16,12 +16,12 @@ String AuxiliarModule::charArrayToString(char char_array[INPUT_MAX_LENGTH + 1]) 
     return string;
 }
 
-bool AuxiliarModule::isValidUsername(Username username) {
-    return isValidInput(username);
-}
-
 bool AuxiliarModule::isValidPassword(Password password) {
     return isValidInput(password);
+}
+
+bool AuxiliarModule::isValidUsername(Username username) {
+    return isValidInput(username);
 }
 
 bool AuxiliarModule::isValidInput(Input input) {

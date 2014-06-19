@@ -13,7 +13,6 @@ private:
     static void dhtMeasurementEvent();
     static void lightIntensityMeasurementEvent();
     static void ttlExpirationEvent();
-    static void debugEvent(); // TODO: remove this
 };
 
 #endif /* EVENT_MODULE */

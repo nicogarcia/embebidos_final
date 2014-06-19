@@ -1,6 +1,6 @@
 #include "LightSensor.h"
 
-LightIntensity LightSensor::light_intensity; // TODO: assign default value
+LightIntensity LightSensor::light_intensity;
 
 LightIntensity LightSensor::getLightIntensity() {
     return light_intensity;
@@ -8,4 +8,5 @@ LightIntensity LightSensor::getLightIntensity() {
 
 void LightSensor::measure() {
     // TODO: actually measure light (and assign it to light_intensity)
+    light_intensity = 24; // TODO: just to debug
 }

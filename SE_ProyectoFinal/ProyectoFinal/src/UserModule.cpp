@@ -12,7 +12,7 @@ bool UserModule::authenticateUser(Username username, Password password) {
     return password == entry->password;
 }
 
-void UserModule::autoLogout() {
+void UserModule::autoLogoutUsers() {
     // Gets the login table entries
     LoginTableEntry *entries = LoginTable::getEntries();
 
@@ -30,7 +30,7 @@ void UserModule::changeUserPassword(Username username, Password password) {
     UserTable::addEntry(username, password, role);
 }
 
-void UserModule::decrementTtls() {
+void UserModule::decrementUserTtls() {
     // Gets the login table length and entries
     int length = LoginTable::getLength();
     LoginTableEntry *entries = LoginTable::getEntries();
@@ -73,6 +73,10 @@ bool UserModule::isUserTableFull() {
 
 void UserModule::loginUser(Username username) {
     LoginTable::addEntry(username, INITIAL_TTL);
+}
+
+void UserModule::logoutUser(Username username) {
+    LoginTable::removeEntry(username);
 }
 
 void UserModule::refreshUserTtl(Username username) {

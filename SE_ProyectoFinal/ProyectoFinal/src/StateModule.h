@@ -5,13 +5,18 @@
 
 class StateModule {
 public:
+    static void closeLock();
+    static void disableLight();
+    static void enableLight();
     static Humidity getHumidity();
     static LightIntensity getLightIntensity();
     static Temperature getTemperature();
     static bool isLightDisabled();
+    static bool isLightOff();
     static bool isLockClosed();
     static void measureLightIntensity();
     static void measureTemperatureAndHumidity();
+    static void openLock();
     static void toggleLight();
     static void toggleLock();
     static void turnOffLight();
