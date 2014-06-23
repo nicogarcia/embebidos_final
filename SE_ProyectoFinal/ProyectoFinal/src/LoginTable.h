@@ -14,7 +14,7 @@ public:
     static void removeEntry(int index);
     static void removeEntry(Username username);
 private:
-    static LoginTableEntry entries[LOGIN_TABLE_CAPACITY];
+    static LoginTableEntry entries[CAPACITY_LOGIN_TABLE];
     static int length;
 };
 

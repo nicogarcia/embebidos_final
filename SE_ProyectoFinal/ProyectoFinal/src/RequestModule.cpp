@@ -161,7 +161,7 @@ void RequestModule::requestState() {
 
 void RequestModule::requestUsers() {
     // Gets the usernames of the users of the system
-    Username usernames[USER_TABLE_CAPACITY];
+    Username usernames[CAPACITY_USER_TABLE];
     int user_count = UserModule::getUserUsernames(usernames);
 
     // Sends a success response with the usernames

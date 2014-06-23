@@ -1,10 +1,10 @@
 #include "LoginTable.h"
 
-LoginTableEntry LoginTable::entries[LOGIN_TABLE_CAPACITY];
+LoginTableEntry LoginTable::entries[CAPACITY_LOGIN_TABLE];
 int LoginTable::length = 0;
 
 void LoginTable::addEntry(Username username, Ttl ttl) {
-    if (length == LOGIN_TABLE_CAPACITY)
+    if (length == CAPACITY_LOGIN_TABLE)
         // The table is full
         return;
 
@@ -45,11 +45,11 @@ int LoginTable::getLength() {
 }
 
 bool LoginTable::isFull() {
-    return length == LOGIN_TABLE_CAPACITY;
+    return length == CAPACITY_LOGIN_TABLE;
 }
 
 void LoginTable::removeEntry(int index) {
-    if (index < 0 || index >= LOGIN_TABLE_CAPACITY)
+    if (index < 0 || index >= CAPACITY_LOGIN_TABLE)
         // Invalid index
         return;
 

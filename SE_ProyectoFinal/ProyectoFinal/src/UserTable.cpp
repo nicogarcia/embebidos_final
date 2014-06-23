@@ -1,10 +1,10 @@
 #include "UserTable.h"
 
-UserTableEntry UserTable::entries[USER_TABLE_CAPACITY];
+UserTableEntry UserTable::entries[CAPACITY_USER_TABLE];
 int UserTable::length = 0;
 
 void UserTable::addEntry(Username username, Password password, Role role) {
-    if (length == USER_TABLE_CAPACITY)
+    if (length == CAPACITY_USER_TABLE)
         // The table is full
         return;
 
@@ -46,11 +46,11 @@ int UserTable::getLength() {
 }
 
 bool UserTable::isFull() {
-    return length == USER_TABLE_CAPACITY;
+    return length == CAPACITY_USER_TABLE;
 }
 
 void UserTable::removeEntry(int index) {
-    if (index < 0 || index >= USER_TABLE_CAPACITY)
+    if (index < 0 || index >= CAPACITY_USER_TABLE)
         // Invalid index
         return;
 

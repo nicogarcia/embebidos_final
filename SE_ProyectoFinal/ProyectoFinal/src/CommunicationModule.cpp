@@ -1,44 +1,23 @@
 #include "CommunicationModule.h"
 
-SoftwareSerial CommunicationModule::BTSerial = SoftwareSerial(7, 6);
+#ifdef DEBUG_MODE
+SoftwareSerial CommunicationModule::bluetoothInterface = SoftwareSerial(PIN_SOFTWARE_SERIAL_RECEPTION, PIN_SOFTWARE_SERIAL_TRANSMISSION);
+#else /* DEBUG_MODE */
+HardwareSerial CommunicationModule::bluetoothInterface = Serial;
+#endif /* DEBUG_MODE */
+
+bool CommunicationModule::ignore_message = true;
+char CommunicationModule::message[MESSAGE_MAX_LENGTH];
+int CommunicationModule::message_index = 0;
 
 void serialEvent() {
-#ifdef DEBUG
-    if (Serial.available()) {
-        char send_it = (char) Serial.read();
-        CommunicationModule::BTSerial.write(send_it);
-    }
-#else /* DEBUG */
-    if (Serial.available()) {
-        if (((char) Serial.read()) == MESSAGE_BEGIN)
-            CommunicationModule::readMessage();
-    }
-#endif /* DEBUG */
+#ifndef DEBUG_MODE
+    CommunicationModule::serialEvent();
+#endif /* DEBUG_MODE */
 }
 
-void CommunicationModule::readMessage() {
-    int char_index = 0, string_index = 0;
-    char read_char;
-    Input input[INPUT_MAX_COUNT];
-    char string[INPUT_MAX_LENGTH];
-    uint8_t code = BTSerial.read() - 49;
-    read_char = BTSerial.read(); //consume message separator
-    read_char = BTSerial.read();
-
-
-    while(BTSerial.available() && read_char != MESSAGE_END ) {
-        if (read_char != MESSAGE_PARAMETERS_SEPARATOR)
-            string[char_index++] = read_char;
-        else {
-            string[char_index] = '\0';
-            char_index = 0;
-            my_strcpy(string, (char*)&input[string_index++]);
-        }
-
-        read_char = BTSerial.read();
-    }
-
-    RequestModule::serveRequest(code, input);
+void CommunicationModule::initialize() {
+    bluetoothInterface.begin(BAUD_RATE_BLUETOOTH);
 }
 
 void CommunicationModule::sendErrorResponse(Parameter error_parameter) {
@@ -54,7 +33,7 @@ void CommunicationModule::sendErrorResponse(Parameter error_parameter) {
     message += MESSAGE_END;
 
     // Sends the message
-    sendMessage(message);
+    sendBluetoothMessage(message);
 }
 
 void CommunicationModule::sendLoginResponse(Parameter logged_in_parameter) {
@@ -70,7 +49,7 @@ void CommunicationModule::sendLoginResponse(Parameter logged_in_parameter) {
     message += MESSAGE_END;
 
     // Sends the message
-    sendMessage(message);
+    sendBluetoothMessage(message);
 }
 
 void CommunicationModule::sendRequestStateResponse(Parameter lock_closed_parameter, Parameter light_off_parameter, Parameter light_disabled_parameter, Temperature temperature, Humidity humidity) {
@@ -94,10 +73,10 @@ void CommunicationModule::sendRequestStateResponse(Parameter lock_closed_paramet
     message += MESSAGE_END;
 
     // Sends the message
-    sendMessage(message);
+    sendBluetoothMessage(message);
 }
 
-void CommunicationModule::sendRequestUsersResponse(int user_count, Username usernames[USER_TABLE_CAPACITY]) {
+void CommunicationModule::sendRequestUsersResponse(int user_count, Username usernames[CAPACITY_USER_TABLE]) {
     // Response
     Response response = SUCCESS;
 
@@ -114,7 +93,7 @@ void CommunicationModule::sendRequestUsersResponse(int user_count, Username user
     message += MESSAGE_END;
 
     // Sends the message
-    sendMessage(message);
+    sendBluetoothMessage(message);
 }
 
 void CommunicationModule::sendSuccessResponse() {
@@ -128,25 +107,63 @@ void CommunicationModule::sendSuccessResponse() {
     message += MESSAGE_END;
 
     // Sends the message
-    sendMessage(message);
+    sendBluetoothMessage(message);
+}
+
+void CommunicationModule::serialEvent() {
+#ifdef DEBUG_MODE
+    readCharacter();
+#else /* DEBUG_MODE */
+    while (bluetoothInterface.available() > 0)
+        // There are characters unread
+        readCharacter();
+#endif /* DEBUG_MODE */
+}
+
+void CommunicationModule::processMessage() {
+    // TODO: procesa el mensaje del buffer. El mensaje está entre [0, message_length)
+    // Tener en cuenta que en el buffer no están ni MESSAGE_BEGIN ni MESSAGE_END, sólo los
+    // datos y los separadores
+
+    // TODO: usar REQUEST_MAX_LENGTH para procesar el request (pueden ser dos dígitos)
+}
+
+void CommunicationModule::readCharacter() {
+    char character = bluetoothInterface.read();
+
+    switch (character) {
+    case MESSAGE_BEGIN : {
+        message_index = 0; // Clears the buffer
+        ignore_message = false;
+        break;
+    }
+
+    case MESSAGE_END : {
+        if (! ignore_message) {
+            // Processes the message
+            processMessage();
+
+            // Ignores characters until a MESSAGE_BEGIN is received
+            ignore_message = true;
+        }
+
+        break;
+    }
+
+    default : {
+        if (! ignore_message) {
+            if (message_index == MESSAGE_MAX_LENGTH)
+                // The buffer is full
+                ignore_message = true;
+            else
+                // Buffers the character
+                message[message_index++] = character;
+        }
+    }
+    }
 }
 
 void CommunicationModule::sendMessage(String message) {
     // TODO: actually send the message (Serial)
-    Serial.println(message);
-}
-
-
-void CommunicationModule::my_strcpy(const char* source, char* destiny) {
-    while((*destiny++ = *source++));
-}
-
-// TODO: debugging purposes
-void CommunicationModule::bluetoothEvent() {
-    while(BTSerial.available()) {
-        char first = (char) BTSerial.read();
-        Serial.write(first);
-        if (first == MESSAGE_BEGIN)
-            readMessage();
-    }
+    Serial.println(message); // TODO: to debug, remove this and use bluetoothInterface
 }

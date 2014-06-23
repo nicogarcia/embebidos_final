@@ -44,7 +44,7 @@ Role UserModule::getUserRole(Username username) {
     return UserTable::getEntry(username)->role;
 }
 
-int UserModule::getUserUsernames(Username usernames[USER_TABLE_CAPACITY]) {
+int UserModule::getUserUsernames(Username usernames[CAPACITY_USER_TABLE]) {
     int user_count = 0;
 
     // Gets the user table length and entries

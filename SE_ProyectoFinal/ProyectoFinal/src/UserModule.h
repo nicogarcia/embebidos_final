@@ -11,7 +11,7 @@ public:
     static void changeUserPassword(Username username, Password password);
     static void decrementUserTtls();
     static Role getUserRole(Username username);
-    static int getUserUsernames(Username usernames[USER_TABLE_CAPACITY]);
+    static int getUserUsernames(Username usernames[CAPACITY_USER_TABLE]);
     static bool isLoginTableFull();
     static bool isUserLoggedIn(Username username);
     static bool isUserTableFull();

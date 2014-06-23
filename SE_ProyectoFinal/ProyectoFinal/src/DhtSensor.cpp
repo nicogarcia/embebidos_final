@@ -14,7 +14,7 @@ Temperature DhtSensor::getTemperature() {
 
 void DhtSensor::measure() {
     // Measures the humidity and temperature
-    int result = sensor.read11(DHT_SENSOR_PIN);
+    int result = sensor.read11(PIN_DHT_SENSOR);
 
     if (result == DHTLIB_OK) {
         // The measurement is correct
@@ -22,7 +22,7 @@ void DhtSensor::measure() {
         temperature = (Temperature) sensor.temperature;
     } else {
         // There was a problem with the measurement
-        humidity = HUMIDITY_UNKNOWN;
-        temperature = TEMPERATURE_UNKNOWN;
+        humidity = UNKNOWN_HUMIDITY;
+        temperature = UNKNOWN_TEMPERATURE;
     }
 }

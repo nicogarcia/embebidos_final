@@ -1,7 +1,7 @@
 #ifndef DEFINITIONS
 #define DEFINITIONS
 
-#define DEBUG
+#define DEBUG_MODE
 
 #include <Arduino.h>
 #include "SoftwareSerial.h"
@@ -40,9 +40,9 @@ typedef struct {
 
 enum Events {
     // The order of the elements is important
-#ifdef DEBUG
+#ifdef DEBUG_MODE
     BLUETOOTH_CHECK,
-#endif /* DEBUG */
+#endif /* DEBUG_MODE */
     DHT_MEASUREMENT,
     LIGHT_INTENSITY_MEASUREMENT,
     TTL_EXPIRATION,
@@ -89,38 +89,44 @@ enum Roles {
     USER
 };
 
+static const uint8_t PIN_DHT_SENSOR = 2;
+static const uint8_t PIN_SOFTWARE_SERIAL_RECEPTION = 7;
+static const uint8_t PIN_SOFTWARE_SERIAL_TRANSMISSION = 6;
+
+static const int REQUEST_MAX_LENGTH = 2;
+
 static const int INPUT_MAX_COUNT = 3;
 static const int INPUT_MIN_LENGTH = 3;
 static const int INPUT_MAX_LENGTH = 16;
 
-static const int USER_TABLE_CAPACITY = 16; // Maximum number of users in the system
-static const int LOGIN_TABLE_CAPACITY = 16; // Maximum number of logged in users
+static const int MESSAGE_MAX_LENGTH = REQUEST_MAX_LENGTH + INPUT_MAX_COUNT * INPUT_MAX_LENGTH + INPUT_MAX_COUNT;
+
+static const char MESSAGE_BEGIN = '$';
+static const char MESSAGE_PARAMETERS_SEPARATOR = '#';
+static const char MESSAGE_END = '*';
+
+static const long int BAUD_RATE_BLUETOOTH = 9600;
+static const long int BAUD_RATE_TERMINAL = 9600;
+
+static const int CAPACITY_USER_TABLE = 16; // Maximum number of users in the system
+static const int CAPACITY_LOGIN_TABLE = 16; // Maximum number of logged in users
 
 static const Ttl INITIAL_TTL = 40;
 
 static const Username ADMIN_DEFAULT_USERNAME = "admin";
 static const Password ADMIN_DEFAULT_PASSWORD = "12345";
 
-static const char MESSAGE_BEGIN = '$';
-static const char MESSAGE_PARAMETERS_SEPARATOR = '#';
-static const char MESSAGE_END = '*';
-
-static const uint8_t DHT_SENSOR_PIN = 2;
-
-static const long int BAUD_RATE = 9600;
-static const long int BT_BAUD_RATE = 9600;
-
-static const Humidity HUMIDITY_UNKNOWN = -1;
-static const Temperature TEMPERATURE_UNKNOWN = 0;
+static const Humidity UNKNOWN_HUMIDITY = -1;
+static const Temperature UNKNOWN_TEMPERATURE = 0;
 
 static const LightIntensity LIGHT_INTENSITY_THRESHOLD = 512; // TODO: calibrate this
 
 static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
     // Milliseconds
     // The order of the elements is important
-#ifdef DEBUG
+#ifdef DEBUG_MODE
     0, // BLUETOOTH_CHECK
-#endif /* DEBUG */
+#endif /* DEBUG_MODE */
     2000, // DHT_MEASUREMENT
     1000, // LIGHT_INTENSITY_MEASUREMENT
     5000 // TTL_EXPIRATION
