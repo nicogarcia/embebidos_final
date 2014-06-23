@@ -7,6 +7,7 @@
 #define forn(i, n) for (int i = 0; i < (int) (n); ++i)
 #define forsn(i, s, n) for (int i = (int) (s); i < (int) (n); ++i)
 
+//TODO: change from int to uint_8??
 typedef int Event;
 typedef int Humidity;
 typedef int LightIntensity;
@@ -100,7 +101,9 @@ static const char MESSAGE_END = '*';
 
 static const uint8_t DHT_SENSOR_PIN = 2;
 
-static const int BAUD_RATE = 9600;
+static const long int BAUD_RATE = 9600;
+//Don't know why doesn't work with higher speed, ¿¿??
+static const long int BT_BAUD_RATE = 9600;
 
 static const Humidity HUMIDITY_UNKNOWN = -1;
 static const Temperature TEMPERATURE_UNKNOWN = 0;

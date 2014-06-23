@@ -4,6 +4,11 @@ Event EventModule::current_event = 0;
 Time EventModule::event_times[EVENT_COUNT];
 
 void EventModule::checkEvent() {
+    //Check Bluetooth
+    if (CommunicationModule::BTSerial.available())
+        CommunicationModule::bluetoothEvent();
+
+
     // Get's the current time
     Time current_time = millis();
 
@@ -42,6 +47,7 @@ void EventModule::checkEvent() {
 void EventModule::initializeSystem() {
     // Serial initialization tasks
     Serial.begin(BAUD_RATE);
+    CommunicationModule::BTSerial.begin(BT_BAUD_RATE);
     Serial.println("Hello world, SISAD!");
 
     // State initialization tasks

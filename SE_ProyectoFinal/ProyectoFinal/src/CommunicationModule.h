@@ -2,11 +2,16 @@
 #define COMMUNICATION_MODULE
 
 #include "Definitions.h"
+#include "SoftwareSerial.h"
 
 void serialEvent();
 
+
 class CommunicationModule {
 public:
+    static SoftwareSerial BTSerial;
+    static void bluetoothEvent();
+    static void readMessage();
     static void sendErrorResponse(Parameter error_parameter);
     static void sendLoginResponse(Parameter logged_in_parameter);
     static void sendRequestStateResponse(Parameter lock_closed_parameter, Parameter light_off_parameter, Parameter light_disabled_parameter, Temperature temperature, Humidity humidity);
@@ -14,6 +19,8 @@ public:
     static void sendSuccessResponse();
 private:
     static void sendMessage(String message);
+    static void my_strcpy(const char* source, char* destiny);
 };
+
 
 #endif /* COMMUNICATION_MODULE */

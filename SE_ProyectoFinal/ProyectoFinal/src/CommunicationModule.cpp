@@ -1,8 +1,50 @@
 #include "CommunicationModule.h"
+#include "Definitions.h"
+#include "SoftwareSerial.h"
+
+
+SoftwareSerial CommunicationModule::BTSerial = SoftwareSerial(7,6);
 
 void serialEvent() {
-    // TODO: serialEvent()
+    //if(first == MESSAGE_BEGIN)
+    //   CommunicationModule::readMessage();
+    if (Serial.available()) {
+        char send_it = (char) Serial.read();
+        CommunicationModule::BTSerial.write(send_it);
+    }
 }
+
+
+
+
+void CommunicationModule::readMessage() {
+    int char_index = 0, string_index = 0;
+    char read_char;
+    Input input[INPUT_MAX_COUNT];
+    char string[INPUT_MAX_LENGTH];
+    uint8_t code = BTSerial.read() - 49;
+    read_char = BTSerial.read(); //consume message separator
+    read_char = BTSerial.read();
+
+
+    while(BTSerial.available() && read_char!=MESSAGE_END ) {
+        if (read_char != MESSAGE_PARAMETERS_SEPARATOR)
+            string[char_index++] = read_char;
+        else {
+            string[char_index] = '\0';
+            char_index = 0;
+            my_strcpy(string,(char*)&input[string_index++]);
+        }
+
+        read_char = BTSerial.read();
+    }
+
+    RequestModule::serveRequest(code,input);
+}
+
+
+
+
 
 void CommunicationModule::sendErrorResponse(Parameter error_parameter) {
     // Response
@@ -97,4 +139,17 @@ void CommunicationModule::sendSuccessResponse() {
 void CommunicationModule::sendMessage(String message) {
     // TODO: actually send the message (Serial)
     Serial.println(message);
+}
+
+
+void CommunicationModule::my_strcpy(const char* source, char* destiny) {
+    while((*destiny++ = *source++));
+}
+
+void CommunicationModule::bluetoothEvent() {
+    while(BTSerial.available()) {
+        if (((char) BTSerial.read()) == MESSAGE_BEGIN)
+            readMessage();
+        //Serial.write(first);
+    }
 }
