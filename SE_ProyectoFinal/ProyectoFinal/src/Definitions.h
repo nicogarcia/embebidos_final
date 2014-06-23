@@ -135,7 +135,6 @@ static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
 #include "AuxiliarModule.h"
 #include "CommunicationModule.h"
 #include "DhtSensor.h"
-#include "EventModule.h"
 #include "Light.h"
 #include "LightSensor.h"
 #include "Lock.h"

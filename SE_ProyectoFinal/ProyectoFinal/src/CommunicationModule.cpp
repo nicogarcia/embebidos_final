@@ -1,5 +1,11 @@
 #include "CommunicationModule.h"
 
+void serialEvent() {
+#ifndef DEBUG_MODE
+    CommunicationModule::serialEvent();
+#endif /* DEBUG_MODE */
+}
+
 #ifdef DEBUG_MODE
 SoftwareSerial CommunicationModule::bluetoothInterface = SoftwareSerial(PIN_SOFTWARE_SERIAL_RECEPTION, PIN_SOFTWARE_SERIAL_TRANSMISSION);
 #else /* DEBUG_MODE */
@@ -9,12 +15,6 @@ HardwareSerial CommunicationModule::bluetoothInterface = Serial;
 bool CommunicationModule::ignore_message = true;
 char CommunicationModule::message[MESSAGE_MAX_LENGTH];
 int CommunicationModule::message_index = 0;
-
-void serialEvent() {
-#ifndef DEBUG_MODE
-    CommunicationModule::serialEvent();
-#endif /* DEBUG_MODE */
-}
 
 void CommunicationModule::initialize() {
     bluetoothInterface.begin(BAUD_RATE_BLUETOOTH);
@@ -33,7 +33,7 @@ void CommunicationModule::sendErrorResponse(Parameter error_parameter) {
     message += MESSAGE_END;
 
     // Sends the message
-    sendBluetoothMessage(message);
+    sendMessage(message);
 }
 
 void CommunicationModule::sendLoginResponse(Parameter logged_in_parameter) {
@@ -49,7 +49,7 @@ void CommunicationModule::sendLoginResponse(Parameter logged_in_parameter) {
     message += MESSAGE_END;
 
     // Sends the message
-    sendBluetoothMessage(message);
+    sendMessage(message);
 }
 
 void CommunicationModule::sendRequestStateResponse(Parameter lock_closed_parameter, Parameter light_off_parameter, Parameter light_disabled_parameter, Temperature temperature, Humidity humidity) {
@@ -73,7 +73,7 @@ void CommunicationModule::sendRequestStateResponse(Parameter lock_closed_paramet
     message += MESSAGE_END;
 
     // Sends the message
-    sendBluetoothMessage(message);
+    sendMessage(message);
 }
 
 void CommunicationModule::sendRequestUsersResponse(int user_count, Username usernames[CAPACITY_USER_TABLE]) {
@@ -93,7 +93,7 @@ void CommunicationModule::sendRequestUsersResponse(int user_count, Username user
     message += MESSAGE_END;
 
     // Sends the message
-    sendBluetoothMessage(message);
+    sendMessage(message);
 }
 
 void CommunicationModule::sendSuccessResponse() {
@@ -107,7 +107,7 @@ void CommunicationModule::sendSuccessResponse() {
     message += MESSAGE_END;
 
     // Sends the message
-    sendBluetoothMessage(message);
+    sendMessage(message);
 }
 
 void CommunicationModule::serialEvent() {
