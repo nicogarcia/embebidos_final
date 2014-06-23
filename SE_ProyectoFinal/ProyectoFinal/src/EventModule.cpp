@@ -4,10 +4,13 @@ Event EventModule::current_event = 0;
 Time EventModule::event_times[EVENT_COUNT];
 
 void EventModule::checkEvent() {
-    //Check Bluetooth
-    if (CommunicationModule::BTSerial.available())
-        CommunicationModule::bluetoothEvent();
 
+    //for debug porpose
+    if (DEBUG_MODE) {
+        //Check Bluetooth
+        if (CommunicationModule::BTSerial.available())
+            CommunicationModule::bluetoothEvent();
+    }
 
     // Get's the current time
     Time current_time = millis();

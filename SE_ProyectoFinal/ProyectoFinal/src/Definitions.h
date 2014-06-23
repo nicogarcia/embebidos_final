@@ -102,8 +102,12 @@ static const char MESSAGE_END = '*';
 static const uint8_t DHT_SENSOR_PIN = 2;
 
 static const long int BAUD_RATE = 9600;
-//Don't know why doesn't work with higher speed, ¿¿??
+//Debug speed
 static const long int BT_BAUD_RATE = 9600;
+
+//Debug mode added
+static const uint8_t DEBUG_MODE = 1;
+
 
 static const Humidity HUMIDITY_UNKNOWN = -1;
 static const Temperature TEMPERATURE_UNKNOWN = 0;

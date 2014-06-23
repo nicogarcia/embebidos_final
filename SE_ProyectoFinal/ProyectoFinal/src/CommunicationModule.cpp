@@ -6,11 +6,17 @@
 SoftwareSerial CommunicationModule::BTSerial = SoftwareSerial(7,6);
 
 void serialEvent() {
-    //if(first == MESSAGE_BEGIN)
-    //   CommunicationModule::readMessage();
-    if (Serial.available()) {
-        char send_it = (char) Serial.read();
-        CommunicationModule::BTSerial.write(send_it);
+    if (DEBUG_MODE) {
+        // For debug porpose
+        if (Serial.available()) {
+            char send_it = (char) Serial.read();
+            CommunicationModule::BTSerial.write(send_it);
+        }
+    } else {
+        if (Serial.available()) {
+            if (((char) Serial.read()) == MESSAGE_BEGIN)
+                CommunicationModule::readMessage();
+        }
     }
 }
 
@@ -146,10 +152,13 @@ void CommunicationModule::my_strcpy(const char* source, char* destiny) {
     while((*destiny++ = *source++));
 }
 
+
+//For debug porpose
 void CommunicationModule::bluetoothEvent() {
     while(BTSerial.available()) {
-        if (((char) BTSerial.read()) == MESSAGE_BEGIN)
+        char first = (char) BTSerial.read();
+        Serial.write(first);
+        if (first == MESSAGE_BEGIN)
             readMessage();
-        //Serial.write(first);
     }
 }
