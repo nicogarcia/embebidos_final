@@ -1,7 +1,5 @@
 #include "RequestModule.h"
-#include "CommunicationModule.h"
 
-//TODO: va con copia, no conviene hacer puntero?
 void RequestModule::serveRequest(Request request, Input input[INPUT_MAX_COUNT]) {
     // Validates the input
     if (! validateInput(request, input)) {

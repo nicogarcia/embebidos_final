@@ -10,6 +10,9 @@ public:
 private:
     static Event current_event;
     static Time event_times[EVENT_COUNT];
+#ifdef DEBUG
+    static void bluetoothCheckEvent();
+#endif /* DEBUG */
     static void dhtMeasurementEvent();
     static void lightIntensityMeasurementEvent();
     static void ttlExpirationEvent();

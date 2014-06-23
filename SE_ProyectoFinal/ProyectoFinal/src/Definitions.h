@@ -1,7 +1,10 @@
 #ifndef DEFINITIONS
 #define DEFINITIONS
 
+#define DEBUG
+
 #include <Arduino.h>
+#include "SoftwareSerial.h"
 #include "../lib/dht.h" // TODO: can be added to search path? (relative path)
 
 #define forn(i, n) for (int i = 0; i < (int) (n); ++i)
@@ -37,6 +40,9 @@ typedef struct {
 
 enum Events {
     // The order of the elements is important
+#ifdef DEBUG
+    BLUETOOTH_CHECK,
+#endif /* DEBUG */
     DHT_MEASUREMENT,
     LIGHT_INTENSITY_MEASUREMENT,
     TTL_EXPIRATION,
@@ -102,12 +108,7 @@ static const char MESSAGE_END = '*';
 static const uint8_t DHT_SENSOR_PIN = 2;
 
 static const long int BAUD_RATE = 9600;
-//Debug speed
 static const long int BT_BAUD_RATE = 9600;
-
-//Debug mode added
-static const uint8_t DEBUG_MODE = 1;
-
 
 static const Humidity HUMIDITY_UNKNOWN = -1;
 static const Temperature TEMPERATURE_UNKNOWN = 0;
@@ -117,6 +118,9 @@ static const LightIntensity LIGHT_INTENSITY_THRESHOLD = 512; // TODO: calibrate 
 static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
     // Milliseconds
     // The order of the elements is important
+#ifdef DEBUG
+    0, // BLUETOOTH_CHECK
+#endif /* DEBUG */
     2000, // DHT_MEASUREMENT
     1000, // LIGHT_INTENSITY_MEASUREMENT
     5000 // TTL_EXPIRATION

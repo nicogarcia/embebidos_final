@@ -1,27 +1,20 @@
 #include "CommunicationModule.h"
-#include "Definitions.h"
-#include "SoftwareSerial.h"
 
-
-SoftwareSerial CommunicationModule::BTSerial = SoftwareSerial(7,6);
+SoftwareSerial CommunicationModule::BTSerial = SoftwareSerial(7, 6);
 
 void serialEvent() {
-    if (DEBUG_MODE) {
-        // For debug porpose
-        if (Serial.available()) {
-            char send_it = (char) Serial.read();
-            CommunicationModule::BTSerial.write(send_it);
-        }
-    } else {
-        if (Serial.available()) {
-            if (((char) Serial.read()) == MESSAGE_BEGIN)
-                CommunicationModule::readMessage();
-        }
+#ifdef DEBUG
+    if (Serial.available()) {
+        char send_it = (char) Serial.read();
+        CommunicationModule::BTSerial.write(send_it);
     }
+#else /* DEBUG */
+    if (Serial.available()) {
+        if (((char) Serial.read()) == MESSAGE_BEGIN)
+            CommunicationModule::readMessage();
+    }
+#endif /* DEBUG */
 }
-
-
-
 
 void CommunicationModule::readMessage() {
     int char_index = 0, string_index = 0;
@@ -33,24 +26,20 @@ void CommunicationModule::readMessage() {
     read_char = BTSerial.read();
 
 
-    while(BTSerial.available() && read_char!=MESSAGE_END ) {
+    while(BTSerial.available() && read_char != MESSAGE_END ) {
         if (read_char != MESSAGE_PARAMETERS_SEPARATOR)
             string[char_index++] = read_char;
         else {
             string[char_index] = '\0';
             char_index = 0;
-            my_strcpy(string,(char*)&input[string_index++]);
+            my_strcpy(string, (char*)&input[string_index++]);
         }
 
         read_char = BTSerial.read();
     }
 
-    RequestModule::serveRequest(code,input);
+    RequestModule::serveRequest(code, input);
 }
-
-
-
-
 
 void CommunicationModule::sendErrorResponse(Parameter error_parameter) {
     // Response
@@ -152,8 +141,7 @@ void CommunicationModule::my_strcpy(const char* source, char* destiny) {
     while((*destiny++ = *source++));
 }
 
-
-//For debug porpose
+// TODO: debugging purposes
 void CommunicationModule::bluetoothEvent() {
     while(BTSerial.available()) {
         char first = (char) BTSerial.read();

@@ -4,14 +4,6 @@ Event EventModule::current_event = 0;
 Time EventModule::event_times[EVENT_COUNT];
 
 void EventModule::checkEvent() {
-
-    //for debug porpose
-    if (DEBUG_MODE) {
-        //Check Bluetooth
-        if (CommunicationModule::BTSerial.available())
-            CommunicationModule::bluetoothEvent();
-    }
-
     // Get's the current time
     Time current_time = millis();
 
@@ -23,6 +15,13 @@ void EventModule::checkEvent() {
         // It's time to check the current event
 
         switch (current_event) {
+#ifdef DEBUG
+        case BLUETOOTH_CHECK : {
+            bluetoothCheckEvent();
+            break;
+        }
+#endif /* DEBUG */
+
         case DHT_MEASUREMENT : {
             dhtMeasurementEvent();
             break;
@@ -50,8 +49,11 @@ void EventModule::checkEvent() {
 void EventModule::initializeSystem() {
     // Serial initialization tasks
     Serial.begin(BAUD_RATE);
-    CommunicationModule::BTSerial.begin(BT_BAUD_RATE);
     Serial.println("Hello world, SISAD!");
+
+#ifdef DEBUG
+    CommunicationModule::BTSerial.begin(BT_BAUD_RATE);
+#endif /* DEBUG */
 
     // State initialization tasks
     StateModule::closeLock();
@@ -97,6 +99,13 @@ void EventModule::initializeSystem() {
     forn (i, EVENT_COUNT)
     event_times[i] = 0;
 }
+
+#ifdef DEBUG
+void EventModule::bluetoothCheckEvent() {
+    if (CommunicationModule::BTSerial.available())
+        CommunicationModule::bluetoothEvent();
+}
+#endif /* DEBUG */
 
 void EventModule::dhtMeasurementEvent() {
     // Measures the temperature and humidity

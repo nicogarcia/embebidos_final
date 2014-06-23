@@ -2,10 +2,8 @@
 #define COMMUNICATION_MODULE
 
 #include "Definitions.h"
-#include "SoftwareSerial.h"
 
 void serialEvent();
-
 
 class CommunicationModule {
 public:
