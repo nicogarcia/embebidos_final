@@ -132,22 +132,22 @@ void CommunicationModule::processMessage() {
     */
 
     //TODO: do it generic?
-    int code = 0;
+    Request request = 0;
     Input parameters[INPUT_MAX_COUNT];
     switch(message_inputs) {
     case 1: {
-        sscanf(message,"%i#%s",code,&parameters[0]);
+        sscanf(message, "%i#%s", request, &parameters[0]);
         break;
     }
     case 2: {
-        sscanf(message,"%i#%s#%s",code,&parameters[0],&parameters[1]);
+        sscanf(message, "%i#%s#%s", request, &parameters[0], &parameters[1]);
         break;
     }
     case 3: {
-        sscanf(message,"%i#%s#%s#%s",code,&parameters[0],&parameters[1],&parameters[2]);
+        sscanf(message, "%i#%s#%s#%s", request, &parameters[0], &parameters[1], &parameters[2]);
     }
     }
-// TODO: usar REQUEST_MAX_LENGTH para procesar el request (pueden ser dos d�gitos)
+    // TODO: usar REQUEST_MAX_LENGTH para procesar el request (pueden ser dos d�gitos)
 }
 
 void CommunicationModule::readCharacter() {
@@ -182,7 +182,7 @@ void CommunicationModule::readCharacter() {
             else {
                 // Buffers the character
                 message[message_index++] = character;
-                
+
                 if (character == MESSAGE_PARAMETERS_SEPARATOR)
                     // The character is a message parameters separator
                     message_inputs++;
