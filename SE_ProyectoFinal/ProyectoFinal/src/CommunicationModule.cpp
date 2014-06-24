@@ -1,4 +1,6 @@
 #include "CommunicationModule.h"
+#include <stdarg.h>
+
 
 
 void serialEvent() {
@@ -133,18 +135,20 @@ void CommunicationModule::processMessage() {
 
     //TODO: do it generic?
     Request request = 0;
-    Input parameters[INPUT_MAX_COUNT];
+    Input inputs[INPUT_MAX_COUNT];
+    for (int i = 0; i<INPUT_MAX_COUNT; i++)
+        inputs = "";
     switch(message_inputs) {
     case 1: {
-        sscanf(message, "%i#%s", request, &parameters[0]);
+        sscanf(message, "%i#%s", request, &inputs[0]);
         break;
     }
     case 2: {
-        sscanf(message, "%i#%s#%s", request, &parameters[0], &parameters[1]);
+        sscanf(message, "%i#%s#%s", request, &inputs[0], &inputs[1]);
         break;
     }
     case 3: {
-        sscanf(message, "%i#%s#%s#%s", request, &parameters[0], &parameters[1], &parameters[2]);
+        sscanf(message, "%i#%s#%s#%s", request, &inputs[0], &inputs[1], &inputs[2]);
     }
     }
     // TODO: usar REQUEST_MAX_LENGTH para procesar el request (pueden ser dos d�gitos)
