@@ -119,7 +119,7 @@ static const Password ADMIN_DEFAULT_PASSWORD = "12345";
 static const Humidity HUMIDITY_UNKNOWN = -1;
 static const Temperature TEMPERATURE_UNKNOWN = 0;
 
-static const LightIntensity LIGHT_INTENSITY_AVERAGE_THRESHOLD = 280;
+static const LightIntensity LIGHT_INTENSITY_AVERAGE_THRESHOLD = 100;
 static const LightIntensity LIGHT_INTENSITY_MAX = 1023;
 static const LightIntensity LIGHT_INTENSITY_QUEUE_CAPACITY = 10;
 

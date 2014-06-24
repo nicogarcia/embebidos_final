@@ -16,6 +16,9 @@ Event MainModule::current_event = 0;
 Time MainModule::event_times[EVENT_COUNT];
 
 void MainModule::checkEvent() {
+    // TODO: remove
+    Serial.println(StateModule::getLightIntensityAverage());
+
     // Get's the current time
     Time current_time = millis();
 
