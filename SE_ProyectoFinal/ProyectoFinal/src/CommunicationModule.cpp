@@ -13,7 +13,7 @@ HardwareSerial CommunicationModule::bluetoothInterface = Serial;
 #endif /* DEBUG_MODE */
 
 bool CommunicationModule::ignore_message;
-char CommunicationModule::message[MESSAGE_MAX_LENGTH];
+char CommunicationModule::message_buffer[MESSAGE_MAX_LENGTH];
 int CommunicationModule::message_index;
 int CommunicationModule::message_inputs;
 
@@ -142,22 +142,24 @@ void CommunicationModule::processMessage() {
     */
 
     //TODO: do it generic?
+
     Request request = 0;
     Input inputs[INPUT_MAX_COUNT];
     forn (i, INPUT_MAX_COUNT)
     inputs[i] = "";
 
+    message_buffer[message_index] = '\0';
     switch(message_inputs) {
     case 1: {
-        sscanf(message, "%i#%s", request, &inputs[0]);
+        sscanf(message_buffer, "%i#%s", request, &inputs[0]);
         break;
     }
     case 2: {
-        sscanf(message, "%i#%s#%s", request, &inputs[0], &inputs[1]);
+        sscanf(message_buffer, "%i#%s#%s", request, &inputs[0], &inputs[1]);
         break;
     }
     case 3: {
-        sscanf(message, "%i#%s#%s#%s", request, &inputs[0], &inputs[1], &inputs[2]);
+        sscanf(message_buffer, "%i#%s#%s#%s", request, &inputs[0], &inputs[1], &inputs[2]);
     }
     }
 
@@ -177,7 +179,6 @@ void CommunicationModule::readCharacter() {
 
     case MESSAGE_END : {
         if (! ignore_message) {
-            message[message_index] = '\0';
             // Processes the message
             processMessage();
 
@@ -195,7 +196,7 @@ void CommunicationModule::readCharacter() {
                 ignore_message = true;
             else {
                 // Buffers the character
-                message[message_index++] = character;
+                message_buffer[message_index++] = character;
 
                 if (character == MESSAGE_PARAMETERS_SEPARATOR)
                     // The character is a message parameters separator

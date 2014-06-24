@@ -40,9 +40,6 @@ typedef struct {
 
 enum Events {
     // The order of the elements is important
-#ifdef DEBUG_MODE
-    BLUETOOTH_CHECK,
-#endif /* DEBUG_MODE */
     DHT_MEASUREMENT,
     LIGHT_INTENSITY_MEASUREMENT,
     TTL_EXPIRATION,
@@ -119,18 +116,16 @@ static const Ttl INITIAL_TTL = 40;
 static const Username ADMIN_DEFAULT_USERNAME = "admin";
 static const Password ADMIN_DEFAULT_PASSWORD = "12345";
 
-static const Humidity UNKNOWN_HUMIDITY = -1;
-static const LightIntensity UNKNOWN_LIGHT_INTENSITY = -1;
-static const Temperature UNKNOWN_TEMPERATURE = 0;
+static const Humidity HUMIDITY_UNKNOWN = -1;
+static const Temperature TEMPERATURE_UNKNOWN = 0;
 
-static const LightIntensity LIGHT_INTENSITY_THRESHOLD = 280;
+static const LightIntensity LIGHT_INTENSITY_AVERAGE_THRESHOLD = 280;
+static const LightIntensity LIGHT_INTENSITY_MAX = 1023;
+static const LightIntensity LIGHT_INTENSITY_QUEUE_CAPACITY = 10;
 
 static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
     // Milliseconds
     // The order of the elements is important
-#ifdef DEBUG_MODE
-    0, // BLUETOOTH_CHECK
-#endif /* DEBUG_MODE */
     2000, // DHT_MEASUREMENT
     1000, // LIGHT_INTENSITY_MEASUREMENT
     5000 // TTL_EXPIRATION
@@ -140,6 +135,7 @@ static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
 #include "CommunicationModule.h"
 #include "DhtSensor.h"
 #include "Light.h"
+#include "LightIntensityQueue.h"
 #include "LightSensor.h"
 #include "Lock.h"
 #include "LoginTable.h"

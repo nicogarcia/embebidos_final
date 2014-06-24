@@ -16,8 +16,8 @@ Humidity StateModule::getHumidity() {
     return DhtSensor::getHumidity();
 }
 
-LightIntensity StateModule::getLightIntensity() {
-    return LightSensor::getLightIntensity();
+LightIntensity StateModule::getLightIntensityAverage() {
+    return LightSensor::getLightIntensityAverage();
 }
 
 Temperature StateModule::getTemperature() {

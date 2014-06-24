@@ -13,8 +13,8 @@ Temperature DhtSensor::getTemperature() {
 }
 
 void DhtSensor::initialize() {
-    humidity = UNKNOWN_HUMIDITY;
-    temperature = UNKNOWN_TEMPERATURE;
+    humidity = HUMIDITY_UNKNOWN;
+    temperature = TEMPERATURE_UNKNOWN;
 }
 
 void DhtSensor::measure() {
@@ -27,7 +27,7 @@ void DhtSensor::measure() {
         temperature = (Temperature) sensor.temperature;
     } else {
         // There was a problem with the measurement
-        humidity = UNKNOWN_HUMIDITY;
-        temperature = UNKNOWN_TEMPERATURE;
+        humidity = HUMIDITY_UNKNOWN;
+        temperature = TEMPERATURE_UNKNOWN;
     }
 }

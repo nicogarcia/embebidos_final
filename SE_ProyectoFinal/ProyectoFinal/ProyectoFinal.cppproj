@@ -189,6 +189,12 @@
     <Compile Include="src\Light.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\LightIntensityQueue.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\LightIntensityQueue.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\LightSensor.cpp">
       <SubType>compile</SubType>
     </Compile>

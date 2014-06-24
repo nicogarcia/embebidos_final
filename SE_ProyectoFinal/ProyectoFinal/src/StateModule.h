@@ -9,7 +9,7 @@ public:
     static void disableLight();
     static void enableLight();
     static Humidity getHumidity();
-    static LightIntensity getLightIntensity();
+    static LightIntensity getLightIntensityAverage();
     static Temperature getTemperature();
     static void initialize();
     static bool isLightDisabled();

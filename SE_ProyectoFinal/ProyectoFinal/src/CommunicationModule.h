@@ -21,7 +21,7 @@ private:
     static HardwareSerial bluetoothInterface;
 #endif /* DEBUG_MODE */
     static bool ignore_message;
-    static char message[MESSAGE_MAX_LENGTH];
+    static char message_buffer[MESSAGE_MAX_LENGTH];
     static int message_index;
     static int message_inputs;
     static void processMessage();

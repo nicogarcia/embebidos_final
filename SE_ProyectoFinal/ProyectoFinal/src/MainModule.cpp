@@ -5,6 +5,10 @@ void setup() {
 }
 
 void loop() {
+#ifdef DEBUG_MODE
+    CommunicationModule::serialEvent();
+#endif /* DEBUG_MODE */
+
     MainModule::checkEvent();
 }
 
@@ -23,13 +27,6 @@ void MainModule::checkEvent() {
         // It's time to check the current event
 
         switch (current_event) {
-#ifdef DEBUG_MODE
-        case BLUETOOTH_CHECK : {
-            bluetoothCheckEvent();
-            break;
-        }
-#endif /* DEBUG_MODE */
-
         case DHT_MEASUREMENT : {
             dhtMeasurementEvent();
             break;
@@ -78,12 +75,6 @@ void MainModule::initialize() {
     RequestModule::serveRequest(REQUEST_STATE, input);
 }
 
-#ifdef DEBUG_MODE
-void MainModule::bluetoothCheckEvent() {
-    CommunicationModule::serialEvent();
-}
-#endif /* DEBUG_MODE */
-
 void MainModule::dhtMeasurementEvent() {
     // Measures the temperature and humidity
     StateModule::measureTemperatureAndHumidity();
@@ -97,9 +88,9 @@ void MainModule::lightIntensityMeasurementEvent() {
         // Light is enabled
 
         // Gets the light intensity
-        LightIntensity light_intensity = StateModule::getLightIntensity();
+        LightIntensity light_intensity = StateModule::getLightIntensityAverage();
 
-        if (light_intensity < LIGHT_INTENSITY_THRESHOLD)
+        if (light_intensity < LIGHT_INTENSITY_AVERAGE_THRESHOLD)
             // The environment is too dark
             StateModule::turnOnLight();
         else
