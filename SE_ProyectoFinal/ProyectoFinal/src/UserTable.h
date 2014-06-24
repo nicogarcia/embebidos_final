@@ -10,6 +10,7 @@ public:
     static UserTableEntry *getEntry(Username username);
     static int getEntryIndex(Username username);
     static int getLength();
+    static void initialize();
     static bool isFull();
     static void removeEntry(int index);
     static void removeEntry(Username username);

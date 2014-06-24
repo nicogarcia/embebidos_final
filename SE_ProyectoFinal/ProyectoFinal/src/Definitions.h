@@ -10,14 +10,14 @@
 #define forn(i, n) for (int i = 0; i < (int) (n); ++i)
 #define forsn(i, s, n) for (int i = (int) (s); i < (int) (n); ++i)
 
-//TODO: change from int to uint_8??
-typedef int Event;
+typedef uint8_t Event;
+typedef uint8_t Parameter;
+typedef uint8_t Request;
+typedef uint8_t Response;
+typedef uint8_t Role;
+
 typedef int Humidity;
 typedef int LightIntensity;
-typedef int Parameter;
-typedef int Request;
-typedef int Response;
-typedef int Role;
 typedef int Temperature;
 typedef int Ttl;
 
@@ -90,9 +90,9 @@ enum Roles {
 };
 
 static const uint8_t PIN_DHT_SENSOR = 2;
-static const uint8_t PIN_LIGHT = 12;
+static const uint8_t PIN_LIGHT = 13;
 static const uint8_t PIN_LIGHT_SENSOR = 3;
-static const uint8_t PIN_LOCK = 13;
+static const uint8_t PIN_LOCK = 12;
 static const uint8_t PIN_SOFTWARE_SERIAL_RECEPTION = 7;
 static const uint8_t PIN_SOFTWARE_SERIAL_TRANSMISSION = 6;
 
@@ -120,6 +120,7 @@ static const Username ADMIN_DEFAULT_USERNAME = "admin";
 static const Password ADMIN_DEFAULT_PASSWORD = "12345";
 
 static const Humidity UNKNOWN_HUMIDITY = -1;
+static const LightIntensity UNKNOWN_LIGHT_INTENSITY = -1;
 static const Temperature UNKNOWN_TEMPERATURE = 0;
 
 static const LightIntensity LIGHT_INTENSITY_THRESHOLD = 280;

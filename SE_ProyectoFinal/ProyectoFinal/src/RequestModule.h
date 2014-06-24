@@ -5,7 +5,7 @@
 
 class RequestModule {
 public:
-    static void serveRequest(Request request, Input input[INPUT_MAX_COUNT]);
+    static void serveRequest(Request request, Input inputs[INPUT_MAX_COUNT]);
 private:
     static void addUser(Username username, Password password);
     static void changePassword(Username username, Password password);
@@ -17,7 +17,7 @@ private:
     static void requestUsers();
     static void toggleLight();
     static void toggleLock();
-    static bool validateInput(Request request, Input input[INPUT_MAX_COUNT]);
+    static bool validateInputs(Request request, Input inputs[INPUT_MAX_COUNT]);
 };
 
 #endif /* REQUEST_MODULE */

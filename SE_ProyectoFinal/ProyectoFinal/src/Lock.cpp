@@ -9,6 +9,11 @@ void Lock::close() {
     digitalWrite(PIN_LOCK, HIGH);
 }
 
+void Lock::initialize() {
+    // Sets the lock pin as an output
+    pinMode(PIN_LOCK, OUTPUT);
+}
+
 bool Lock::isClosed() {
     return is_closed;
 }

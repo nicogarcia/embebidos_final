@@ -5,11 +5,12 @@
 
 class Lock {
 public:
-	static void close();
-	static bool isClosed();
-	static void open();
+    static void close();
+    static void initialize();
+    static bool isClosed();
+    static void open();
 private:
-	static bool is_closed;
+    static bool is_closed;
 };
 
 #endif /* LOCK */

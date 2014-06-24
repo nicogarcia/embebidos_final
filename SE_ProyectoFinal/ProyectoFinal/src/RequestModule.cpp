@@ -1,15 +1,15 @@
 #include "RequestModule.h"
 
-void RequestModule::serveRequest(Request request, Input input[INPUT_MAX_COUNT]) {
-    // Validates the input
-    if (! validateInput(request, input)) {
+void RequestModule::serveRequest(Request request, Input inputs[INPUT_MAX_COUNT]) {
+    // Validates the inputs
+    if (! validateInputs(request, inputs)) {
         // The input is invalid
         CommunicationModule::sendErrorResponse(INVALID_INPUT);
         return;
     }
 
     // Authorizes the request
-    if (! SecurityModule::authorizeRequest(request, input)) {
+    if (! SecurityModule::authorizeRequest(request, inputs)) {
         // The request has not been authorized
         CommunicationModule::sendErrorResponse(UNAUTHORIZED);
         return;
@@ -18,32 +18,32 @@ void RequestModule::serveRequest(Request request, Input input[INPUT_MAX_COUNT]) 
     // Serves the request
     switch (request) {
     case ADD_USER : {
-        addUser(input[1], input[2]);
+        addUser(inputs[1], inputs[2]);
         break;
     }
 
     case CHANGE_PASSWORD : {
-        changePassword(input[0], input[1]);
+        changePassword(inputs[0], inputs[1]);
         break;
     }
 
     case LOGIN : {
-        login(input[0], input[1]);
+        login(inputs[0], inputs[1]);
         break;
     }
 
     case LOGOUT : {
-        logout(input[0]);
+        logout(inputs[0]);
         break;
     }
 
     case REFRESH_TTL : {
-        refreshTtl(input[0]);
+        refreshTtl(inputs[0]);
         break;
     }
 
     case REMOVE_USER : {
-        removeUser(input[1]);
+        removeUser(inputs[1]);
         break;
     }
 
@@ -184,8 +184,8 @@ void RequestModule::toggleLock() {
     CommunicationModule::sendSuccessResponse();
 }
 
-bool RequestModule::validateInput(Request request, Input input[INPUT_MAX_COUNT]) {
-    if (! AuxiliarModule::isValidUsername(input[0]))
+bool RequestModule::validateInputs(Request request, Input inputs[INPUT_MAX_COUNT]) {
+    if (! AuxiliarModule::isValidUsername(inputs[0]))
         // The petitioner username is invalid
         return false;
 
@@ -199,31 +199,31 @@ bool RequestModule::validateInput(Request request, Input input[INPUT_MAX_COUNT])
         return true;
 
     case ADD_USER : {
-        if (! AuxiliarModule::isValidUsername(input[1]))
+        if (! AuxiliarModule::isValidUsername(inputs[1]))
             return false;
 
-        if (! AuxiliarModule::isValidPassword(input[2]))
+        if (! AuxiliarModule::isValidPassword(inputs[2]))
             return false;
 
         return true;
     }
 
     case CHANGE_PASSWORD : {
-        if (! AuxiliarModule::isValidPassword(input[1]))
+        if (! AuxiliarModule::isValidPassword(inputs[1]))
             return false;
 
         return true;
     }
 
     case LOGIN : {
-        if (! AuxiliarModule::isValidPassword(input[1]))
+        if (! AuxiliarModule::isValidPassword(inputs[1]))
             return false;
 
         return true;
     }
 
     case REMOVE_USER : {
-        if (! AuxiliarModule::isValidUsername(input[1]))
+        if (! AuxiliarModule::isValidUsername(inputs[1]))
             return false;
 
         return true;

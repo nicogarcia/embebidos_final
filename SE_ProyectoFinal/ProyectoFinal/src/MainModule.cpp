@@ -55,29 +55,27 @@ void MainModule::checkEvent() {
 }
 
 void MainModule::initialize() {
-    // Pin modes
-    pinMode(PIN_LIGHT, OUTPUT);
-    pinMode(PIN_LOCK, OUTPUT);
-
-    // Communication initialization tasks
+    // Modules initializations
     CommunicationModule::initialize();
-#ifdef DEBUG_MODE
-    Serial.begin(BAUD_RATE_TERMINAL);
-    Serial.println("Hello from SISAD");
-#endif /* DEBUG_MODE */
-
-    // State initialization tasks
-    StateModule::closeLock();
-    StateModule::disableLight();
-    StateModule::measureLightIntensity();
-    StateModule::measureTemperatureAndHumidity();
-
-    // Adds a default administrator
-    UserModule::addUser(ADMIN_DEFAULT_USERNAME, ADMIN_DEFAULT_PASSWORD, ADMIN); // TODO: to define: are we going to use some non-volatile storage?
+    StateModule::initialize();
+    UserModule::initialize();
 
     // Initializes the event times
     forn (i, EVENT_COUNT)
     event_times[i] = 0;
+
+    // TODO: add debug commands
+    Input input[INPUT_MAX_COUNT];
+
+    input[0] = ADMIN_DEFAULT_USERNAME;
+    input[1] = ADMIN_DEFAULT_PASSWORD;
+    RequestModule::serveRequest(LOGIN, input);
+
+    input[0] = ADMIN_DEFAULT_USERNAME;
+    RequestModule::serveRequest(TOGGLE_LIGHT, input);
+
+    input[0] = ADMIN_DEFAULT_USERNAME;
+    RequestModule::serveRequest(REQUEST_STATE, input);
 }
 
 #ifdef DEBUG_MODE

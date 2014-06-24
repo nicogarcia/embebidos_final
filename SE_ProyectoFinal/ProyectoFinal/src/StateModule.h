@@ -11,6 +11,7 @@ public:
     static Humidity getHumidity();
     static LightIntensity getLightIntensity();
     static Temperature getTemperature();
+    static void initialize();
     static bool isLightDisabled();
     static bool isLightOff();
     static bool isLockClosed();

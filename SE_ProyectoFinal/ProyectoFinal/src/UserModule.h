@@ -12,6 +12,7 @@ public:
     static void decrementUserTtls();
     static Role getUserRole(Username username);
     static int getUserUsernames(Username usernames[CAPACITY_USER_TABLE]);
+    static void initialize();
     static bool isLoginTableFull();
     static bool isUserLoggedIn(Username username);
     static bool isUserTableFull();

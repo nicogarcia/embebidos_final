@@ -24,6 +24,20 @@ Temperature StateModule::getTemperature() {
     return DhtSensor::getTemperature();
 }
 
+void StateModule::initialize() {
+    // Modules initializations
+    DhtSensor::initialize();
+    Light::initialize();
+    LightSensor::initialize();
+    Lock::initialize();
+
+    // State initialization tasks
+    closeLock();
+    disableLight();
+    measureLightIntensity();
+    measureTemperatureAndHumidity();
+}
+
 bool StateModule::isLightDisabled() {
     return Light::isDisabled();
 }

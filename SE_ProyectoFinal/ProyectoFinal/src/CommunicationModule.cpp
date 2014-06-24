@@ -1,7 +1,4 @@
 #include "CommunicationModule.h"
-#include <stdarg.h>
-
-
 
 void serialEvent() {
 #ifndef DEBUG_MODE
@@ -15,13 +12,24 @@ SoftwareSerial CommunicationModule::bluetoothInterface = SoftwareSerial(PIN_SOFT
 HardwareSerial CommunicationModule::bluetoothInterface = Serial;
 #endif /* DEBUG_MODE */
 
-bool CommunicationModule::ignore_message = true;
+bool CommunicationModule::ignore_message;
 char CommunicationModule::message[MESSAGE_MAX_LENGTH];
-int CommunicationModule::message_index = 0;
-int CommunicationModule::message_inputs = 0;
+int CommunicationModule::message_index;
+int CommunicationModule::message_inputs;
 
 void CommunicationModule::initialize() {
+    ignore_message = true;
+    message_index = 0;
+    message_inputs = 0;
+
+    // Initializes the bluetooth interface
     bluetoothInterface.begin(BAUD_RATE_BLUETOOTH);
+
+#ifdef DEBUG_MODE
+    // Initializes the terminal interface
+    Serial.begin(BAUD_RATE_TERMINAL);
+    Serial.println("Hello from SISAD");
+#endif /* DEBUG_MODE */
 }
 
 void CommunicationModule::sendErrorResponse(Parameter error_parameter) {
@@ -136,8 +144,9 @@ void CommunicationModule::processMessage() {
     //TODO: do it generic?
     Request request = 0;
     Input inputs[INPUT_MAX_COUNT];
-    for (int i = 0; i<INPUT_MAX_COUNT; i++)
-        inputs = "";
+    forn (i, INPUT_MAX_COUNT)
+    inputs[i] = "";
+
     switch(message_inputs) {
     case 1: {
         sscanf(message, "%i#%s", request, &inputs[0]);
@@ -151,7 +160,8 @@ void CommunicationModule::processMessage() {
         sscanf(message, "%i#%s#%s#%s", request, &inputs[0], &inputs[1], &inputs[2]);
     }
     }
-    // TODO: usar REQUEST_MAX_LENGTH para procesar el request (pueden ser dos d�gitos)
+
+    RequestModule::serveRequest(request, inputs);
 }
 
 void CommunicationModule::readCharacter() {
