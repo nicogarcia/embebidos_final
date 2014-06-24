@@ -1,21 +1,5 @@
 #include "AuxiliarModule.h"
 
-String AuxiliarModule::charArrayToString(char char_array[INPUT_MAX_LENGTH + 1]) {
-    String string = "";
-
-    int index = 0;
-    char character = char_array[index];
-    while (character != '\0' && index < INPUT_MAX_LENGTH) {
-        // Appends the character to the string
-        string += character;
-
-        // Gets the next character
-        character = char_array[++index];
-    }
-
-    return string;
-}
-
 bool AuxiliarModule::isValidPassword(Password password) {
     return isValidInput(password);
 }

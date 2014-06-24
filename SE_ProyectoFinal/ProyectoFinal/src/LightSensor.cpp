@@ -7,6 +7,6 @@ LightIntensity LightSensor::getLightIntensity() {
 }
 
 void LightSensor::measure() {
-    // TODO: actually measure light (and assign it to light_intensity)
-    light_intensity = 24; // TODO: just to debug
+    // Measures the light intensity
+    light_intensity = analogRead(PIN_LIGHT_SENSOR);
 }

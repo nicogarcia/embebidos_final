@@ -25,11 +25,13 @@ bool Light::isOff() {
 void Light::turnOff() {
     is_off = true;
 
-    // TODO: actually turn the light off
+    // Turns the light off
+    digitalWrite(PIN_LIGHT, HIGH);
 }
 
 void Light::turnOn() {
     is_off = false;
 
-    // TODO: actually turn the light on
+    // Turns the light on
+    digitalWrite(PIN_LIGHT, LOW);
 }

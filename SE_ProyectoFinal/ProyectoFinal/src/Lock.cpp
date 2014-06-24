@@ -5,7 +5,8 @@ bool Lock::is_closed;
 void Lock::close() {
     is_closed = true;
 
-    // TODO: actually close the lock
+    // Closes the lock
+    digitalWrite(PIN_LOCK, HIGH);
 }
 
 bool Lock::isClosed() {
@@ -15,5 +16,6 @@ bool Lock::isClosed() {
 void Lock::open() {
     is_closed = false;
 
-    // TODO: actually open the lock
+    // Opens the lock
+    digitalWrite(PIN_LOCK, LOW);
 }

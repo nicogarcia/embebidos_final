@@ -90,6 +90,9 @@ enum Roles {
 };
 
 static const uint8_t PIN_DHT_SENSOR = 2;
+static const uint8_t PIN_LIGHT = 12;
+static const uint8_t PIN_LIGHT_SENSOR = 3;
+static const uint8_t PIN_LOCK = 13;
 static const uint8_t PIN_SOFTWARE_SERIAL_RECEPTION = 7;
 static const uint8_t PIN_SOFTWARE_SERIAL_TRANSMISSION = 6;
 
@@ -119,7 +122,7 @@ static const Password ADMIN_DEFAULT_PASSWORD = "12345";
 static const Humidity UNKNOWN_HUMIDITY = -1;
 static const Temperature UNKNOWN_TEMPERATURE = 0;
 
-static const LightIntensity LIGHT_INTENSITY_THRESHOLD = 512; // TODO: calibrate this
+static const LightIntensity LIGHT_INTENSITY_THRESHOLD = 280;
 
 static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
     // Milliseconds
