@@ -16,7 +16,7 @@ HardwareSerial CommunicationModule::bluetoothInterface = Serial;
 bool CommunicationModule::ignore_message = true;
 char CommunicationModule::message[MESSAGE_MAX_LENGTH];
 int CommunicationModule::message_index = 0;
-int CommunicationModule::message_parameters = 0;
+int CommunicationModule::message_inputs = 0;
 
 void CommunicationModule::initialize() {
     bluetoothInterface.begin(BAUD_RATE_BLUETOOTH);
@@ -113,23 +113,19 @@ void CommunicationModule::sendSuccessResponse() {
 }
 
 void CommunicationModule::serialEvent() {
-#ifdef DEBUG_MODE
-    readCharacter();
-#else /* DEBUG_MODE */
     while (bluetoothInterface.available() > 0)
         // There are characters unread
         readCharacter();
-#endif /* DEBUG_MODE */
 }
 
 void CommunicationModule::processMessage() {
-    // TODO: procesa el mensaje del buffer. El mensaje está entre [0, message_length)
-    // Tener en cuenta que en el buffer no están ni MESSAGE_BEGIN ni MESSAGE_END, sólo los
+    // TODO: procesa el mensaje del buffer. El mensaje estï¿½ entre [0, message_length)
+    // Tener en cuenta que en el buffer no estï¿½n ni MESSAGE_BEGIN ni MESSAGE_END, sï¿½lo los
     // datos y los separadores
     /*
     String format = "%i";
     int i = 0;
-    while(message_parameters < i) {
+    while(message_inputs < i) {
         format = format + "#%s";
         i++;
     }
@@ -138,7 +134,7 @@ void CommunicationModule::processMessage() {
     //TODO: do it generic?
     int code = 0;
     Input parameters[INPUT_MAX_COUNT];
-    switch(message_parameters) {
+    switch(message_inputs) {
     case 1: {
         sscanf(message,"%i#%s",code,&parameters[0]);
         break;
@@ -151,7 +147,7 @@ void CommunicationModule::processMessage() {
         sscanf(message,"%i#%s#%s#%s",code,&parameters[0],&parameters[1],&parameters[2]);
     }
     }
-// TODO: usar REQUEST_MAX_LENGTH para procesar el request (pueden ser dos dígitos)
+// TODO: usar REQUEST_MAX_LENGTH para procesar el request (pueden ser dos dï¿½gitos)
 }
 
 void CommunicationModule::readCharacter() {
@@ -159,9 +155,9 @@ void CommunicationModule::readCharacter() {
 
     switch (character) {
     case MESSAGE_BEGIN : {
-        message_index = 0; // Clears the buffer
-        message_parameters = 0; //to count the number of input parameters
         ignore_message = false;
+        message_index = 0; // Clears the buffer
+        message_inputs = 0; // Resets the number of inputs
         break;
     }
 
@@ -186,8 +182,10 @@ void CommunicationModule::readCharacter() {
             else {
                 // Buffers the character
                 message[message_index++] = character;
+                
                 if (character == MESSAGE_PARAMETERS_SEPARATOR)
-                    message_parameters++;
+                    // The character is a message parameters separator
+                    message_inputs++;
             }
         }
     }
