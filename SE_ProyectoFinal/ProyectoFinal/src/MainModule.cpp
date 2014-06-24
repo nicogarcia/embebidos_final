@@ -16,9 +16,6 @@ Event MainModule::current_event = 0;
 Time MainModule::event_times[EVENT_COUNT];
 
 void MainModule::checkEvent() {
-    // TODO: remove
-    Serial.println(StateModule::getLightIntensityAverage());
-
     // Get's the current time
     Time current_time = millis();
 
@@ -63,19 +60,6 @@ void MainModule::initialize() {
     // Initializes the event times
     forn (i, EVENT_COUNT)
     event_times[i] = 0;
-
-    // TODO: add debug commands
-    Input input[INPUT_MAX_COUNT];
-
-    input[0] = ADMIN_DEFAULT_USERNAME;
-    input[1] = ADMIN_DEFAULT_PASSWORD;
-    RequestModule::serveRequest(LOGIN, input);
-
-    input[0] = ADMIN_DEFAULT_USERNAME;
-    RequestModule::serveRequest(TOGGLE_LIGHT, input);
-
-    input[0] = ADMIN_DEFAULT_USERNAME;
-    RequestModule::serveRequest(REQUEST_STATE, input);
 }
 
 void MainModule::dhtMeasurementEvent() {

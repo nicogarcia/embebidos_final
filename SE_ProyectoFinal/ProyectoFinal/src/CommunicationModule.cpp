@@ -129,6 +129,12 @@ void CommunicationModule::serialEvent() {
 }
 
 void CommunicationModule::processMessage() {
+    message_buffer[message_index] = '\0';
+
+#ifdef DEBUG
+    Serial.println(message_buffer);
+#endif /* DEBUG */
+
     // TODO: procesa el mensaje del buffer. El mensaje est� entre [0, message_length)
     // Tener en cuenta que en el buffer no est�n ni MESSAGE_BEGIN ni MESSAGE_END, s�lo los
     // datos y los separadores
@@ -148,7 +154,6 @@ void CommunicationModule::processMessage() {
     forn (i, INPUT_MAX_COUNT)
     inputs[i] = "";
 
-    message_buffer[message_index] = '\0';
     switch(message_inputs) {
     case 1: {
         sscanf(message_buffer, "%i#%s", request, &inputs[0]);
@@ -162,6 +167,13 @@ void CommunicationModule::processMessage() {
         sscanf(message_buffer, "%i#%s#%s#%s", request, &inputs[0], &inputs[1], &inputs[2]);
     }
     }
+
+    inputs[0][5] = '\0';
+    inputs[1][5] = '\0';
+
+    Serial.println(request);
+    Serial.println(inputs[0]);
+    Serial.println(inputs[1]);
 
     RequestModule::serveRequest(request, inputs);
 }
@@ -209,5 +221,12 @@ void CommunicationModule::readCharacter() {
 
 void CommunicationModule::sendMessage(String message) {
     // TODO: actually send the message (Serial)
-    Serial.println(message); // TODO: to debug, remove this and use bluetoothInterface
+#ifdef DEBUG
+    Serial.println(message);
+#endif /* DEBUG */
+
+    int size = message.length();
+    char message_char[size];
+    message.toCharArray(message_char, size, 0);
+    bluetoothInterface.write(message_char);
 }
