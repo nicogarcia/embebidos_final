@@ -23,6 +23,7 @@ private:
     static bool ignore_message;
     static char message[MESSAGE_MAX_LENGTH];
     static int message_index;
+    static int message_parameters;
     static void processMessage();
     static void readCharacter();
     static void sendMessage(String message);
