@@ -1,30 +1,31 @@
 #include "CommunicationModule.h"
-#include <stdarg.h>
 
-
-
-void serialEvent() {
-#ifndef DEBUG_MODE
-    CommunicationModule::serialEvent();
-#endif /* DEBUG_MODE */
-}
-
-#ifdef DEBUG_MODE
-SoftwareSerial CommunicationModule::bluetoothInterface = SoftwareSerial(PIN_SOFTWARE_SERIAL_RECEPTION, PIN_SOFTWARE_SERIAL_TRANSMISSION);
-#else /* DEBUG_MODE */
-HardwareSerial CommunicationModule::bluetoothInterface = Serial;
-#endif /* DEBUG_MODE */
-
-bool CommunicationModule::ignore_message = true;
-char CommunicationModule::message[MESSAGE_MAX_LENGTH];
-int CommunicationModule::message_index = 0;
-int CommunicationModule::message_inputs = 0;
+SoftwareSerial CommunicationModule::bluetoothInterface(PIN_SOFTWARE_SERIAL_RECEPTION, PIN_SOFTWARE_SERIAL_TRANSMISSION);
+bool CommunicationModule::ignore_message;
+char CommunicationModule::message_buffer[INPUT_MESSAGE_MAX_LENGTH];
+int CommunicationModule::message_index;
 
 void CommunicationModule::initialize() {
+    ignore_message = true;
+    message_index = 0;
+
+    // Initializes the bluetooth interface
     bluetoothInterface.begin(BAUD_RATE_BLUETOOTH);
+
+#ifdef DEBUG_MODE
+    // Initializes the terminal interface
+    Serial.begin(BAUD_RATE_TERMINAL);
+    Serial.println("Hello from SISAD");
+#endif /* DEBUG_MODE */
 }
 
-void CommunicationModule::sendErrorResponse(Parameter error_parameter) {
+void CommunicationModule::readRequest() {
+    while (bluetoothInterface.available() > 0)
+        // There are characters unread
+        readCharacter();
+}
+
+void CommunicationModule::sendErrorResponse(OutputParameter error_parameter) {
     // Response
     Response response = ERROR;
 
@@ -32,7 +33,7 @@ void CommunicationModule::sendErrorResponse(Parameter error_parameter) {
     String message = "";
     message += MESSAGE_BEGIN;
     message += response;
-    message += MESSAGE_PARAMETERS_SEPARATOR;
+    message += MESSAGE_INPUTS_SEPARATOR;
     message += error_parameter;
     message += MESSAGE_END;
 
@@ -40,7 +41,7 @@ void CommunicationModule::sendErrorResponse(Parameter error_parameter) {
     sendMessage(message);
 }
 
-void CommunicationModule::sendLoginResponse(Parameter logged_in_parameter) {
+void CommunicationModule::sendLoginResponse(OutputParameter logged_in_parameter) {
     // Response
     Response response = SUCCESS;
 
@@ -48,7 +49,7 @@ void CommunicationModule::sendLoginResponse(Parameter logged_in_parameter) {
     String message = "";
     message += MESSAGE_BEGIN;
     message += response;
-    message += MESSAGE_PARAMETERS_SEPARATOR;
+    message += MESSAGE_INPUTS_SEPARATOR;
     message += logged_in_parameter;
     message += MESSAGE_END;
 
@@ -56,7 +57,7 @@ void CommunicationModule::sendLoginResponse(Parameter logged_in_parameter) {
     sendMessage(message);
 }
 
-void CommunicationModule::sendRequestStateResponse(Parameter lock_closed_parameter, Parameter light_off_parameter, Parameter light_disabled_parameter, Temperature temperature, Humidity humidity) {
+void CommunicationModule::sendRequestStateResponse(OutputParameter lock_closed_parameter, OutputParameter light_off_parameter, OutputParameter light_disabled_parameter, Temperature temperature, Humidity humidity) {
     // Response
     Response response = SUCCESS;
 
@@ -64,15 +65,15 @@ void CommunicationModule::sendRequestStateResponse(Parameter lock_closed_paramet
     String message = "";
     message += MESSAGE_BEGIN;
     message += response;
-    message += MESSAGE_PARAMETERS_SEPARATOR;
+    message += MESSAGE_INPUTS_SEPARATOR;
     message += lock_closed_parameter;
-    message += MESSAGE_PARAMETERS_SEPARATOR;
+    message += MESSAGE_INPUTS_SEPARATOR;
     message += light_off_parameter;
-    message += MESSAGE_PARAMETERS_SEPARATOR;
+    message += MESSAGE_INPUTS_SEPARATOR;
     message += light_disabled_parameter;
-    message += MESSAGE_PARAMETERS_SEPARATOR;
+    message += MESSAGE_INPUTS_SEPARATOR;
     message += temperature;
-    message += MESSAGE_PARAMETERS_SEPARATOR;
+    message += MESSAGE_INPUTS_SEPARATOR;
     message += humidity;
     message += MESSAGE_END;
 
@@ -88,10 +89,10 @@ void CommunicationModule::sendRequestUsersResponse(int user_count, Username user
     String message = "";
     message += MESSAGE_BEGIN;
     message += response;
-    message += MESSAGE_PARAMETERS_SEPARATOR;
+    message += MESSAGE_INPUTS_SEPARATOR;
     message += user_count;
     forn (i, user_count) {
-        message += MESSAGE_PARAMETERS_SEPARATOR;
+        message += MESSAGE_INPUTS_SEPARATOR;
         message += usernames[i];
     }
     message += MESSAGE_END;
@@ -114,45 +115,26 @@ void CommunicationModule::sendSuccessResponse() {
     sendMessage(message);
 }
 
-void CommunicationModule::serialEvent() {
-    while (bluetoothInterface.available() > 0)
-        // There are characters unread
-        readCharacter();
-}
-
 void CommunicationModule::processMessage() {
-    // TODO: procesa el mensaje del buffer. El mensaje est� entre [0, message_length)
-    // Tener en cuenta que en el buffer no est�n ni MESSAGE_BEGIN ni MESSAGE_END, s�lo los
-    // datos y los separadores
-    /*
-    String format = "%i";
-    int i = 0;
-    while(message_inputs < i) {
-        format = format + "#%s";
-        i++;
-    }
-    */
-
-    //TODO: do it generic?
-    Request request = 0;
     Input inputs[INPUT_MAX_COUNT];
-    for (int i = 0; i<INPUT_MAX_COUNT; i++)
-        inputs[i] = "";
-    switch(message_inputs) {
-    case 1: {
-        sscanf(message, "%i#%s", request, &inputs[0]);
-        break;
-    }
-    case 2: {
-        sscanf(message, "%i#%s#%s", request, &inputs[0], &inputs[1]);
-        break;
-    }
-    case 3: {
-        sscanf(message, "%i#%s#%s#%s", request, &inputs[0], &inputs[1], &inputs[2]);
-    }
-    }
-    // TODO: usar REQUEST_MAX_LENGTH para procesar el request (pueden ser dos d�gitos)
 
+    // Initializes the inputs as empty strings
+    forn (i, INPUT_MAX_COUNT)
+    inputs[i] = "";
+
+    int inputs_index = 0;
+    forn (i, message_index)
+    if (message_buffer[i] == MESSAGE_INPUTS_SEPARATOR) {
+        inputs_index++;
+
+        if (inputs_index == INPUT_MAX_COUNT)
+            // There are too many inputs: ignores the message
+            return;
+    } else
+        inputs[inputs_index] += message_buffer[i];
+
+    // Serves the request
+    RequestModule::serveRequest(inputs);
 }
 
 void CommunicationModule::readCharacter() {
@@ -160,44 +142,64 @@ void CommunicationModule::readCharacter() {
 
     switch (character) {
     case MESSAGE_BEGIN : {
+#ifdef DEBUG_MODE
+        Serial.print("R: ");
+        Serial.print(character);
+#endif /* DEBUG_MODE */
+
         ignore_message = false;
         message_index = 0; // Clears the buffer
-        message_inputs = 0; // Resets the number of inputs
         break;
     }
 
     case MESSAGE_END : {
-        if (! ignore_message) {
-            message[message_index] = '\0';
-            // Processes the message
-            processMessage();
+#ifdef DEBUG_MODE
+        Serial.println(character);
+#endif /* DEBUG_MODE */
 
+        if (! ignore_message) {
             // Ignores characters until a MESSAGE_BEGIN is received
             ignore_message = true;
+
+            // Processes the message
+            processMessage();
         }
 
         break;
     }
 
     default : {
+#ifdef DEBUG_MODE
+        Serial.print(character);
+#endif /* DEBUG_MODE */
+
         if (! ignore_message) {
-            if (message_index == MESSAGE_MAX_LENGTH)
+            if (message_index == INPUT_MESSAGE_MAX_LENGTH)
                 // The buffer is full
                 ignore_message = true;
-            else {
+            else
                 // Buffers the character
-                message[message_index++] = character;
-
-                if (character == MESSAGE_PARAMETERS_SEPARATOR)
-                    // The character is a message parameters separator
-                    message_inputs++;
-            }
+                message_buffer[message_index++] = character;
         }
     }
     }
 }
 
 void CommunicationModule::sendMessage(String message) {
-    // TODO: actually send the message (Serial)
-    Serial.println(message); // TODO: to debug, remove this and use bluetoothInterface
+#ifdef DEBUG_MODE
+    Serial.print("T: ");
+    Serial.println(message);
+#endif /* DEBUG_MODE */
+
+    // Parses from string to char array
+    int length = message.length();
+    char message_array[length + 1];
+
+    forn (i, length)
+    message_array[i] = message.charAt(i);
+
+    message_array[length] = '\0';
+
+    // Sends the message bytes
+    bluetoothInterface.print(message_array);
 }

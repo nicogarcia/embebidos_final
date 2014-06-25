@@ -8,6 +8,7 @@ public:
     static bool isValidPassword(String password);
     static bool isValidRequest(String request);
     static bool isValidUsername(String username);
+    static void stringToCharArray(String string, char *array);
 private:
     static bool isValidInputParameter(String input_parameter);
     static bool isValidInputParameterCharacter(char character);

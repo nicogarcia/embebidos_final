@@ -10,22 +10,24 @@
 #define forn(i, n) for (int i = 0; i < (int) (n); ++i)
 #define forsn(i, s, n) for (int i = (int) (s); i < (int) (n); ++i)
 
-//TODO: change from int to uint8_t??
-typedef int Event;
+typedef uint8_t Event;
+typedef uint8_t OutputParameter;
+typedef uint8_t Request;
+typedef uint8_t Response;
+typedef uint8_t Role;
+
 typedef int Humidity;
 typedef int LightIntensity;
-typedef int Parameter;
-typedef int Request;
-typedef int Response;
-typedef int Role;
 typedef int Temperature;
 typedef int Ttl;
 
 typedef unsigned long int Time;
 
 typedef String Input;
-typedef String Password;
-typedef String Username;
+typedef String InputParameter;
+
+typedef InputParameter Password;
+typedef InputParameter Username;
 
 typedef struct {
     Username username;
@@ -40,16 +42,13 @@ typedef struct {
 
 enum Events {
     // The order of the elements is important
-#ifdef DEBUG_MODE
-    BLUETOOTH_CHECK,
-#endif /* DEBUG_MODE */
     DHT_MEASUREMENT,
     LIGHT_INTENSITY_MEASUREMENT,
     TTL_EXPIRATION,
     EVENT_COUNT // This element should always be kept in the last position
 };
 
-enum Parameters {
+enum OutputParameters {
     INVALID_INPUT = 0,
     LIGHT_DISABLED = 1,
     LIGHT_ENABLED = 2,
@@ -90,28 +89,30 @@ enum Roles {
 };
 
 static const uint8_t PIN_DHT_SENSOR = 2;
-static const uint8_t PIN_LIGHT = 12;
+static const uint8_t PIN_LIGHT = 13;
 static const uint8_t PIN_LIGHT_SENSOR = 3;
-static const uint8_t PIN_LOCK = 13;
+static const uint8_t PIN_LOCK = 12;
 static const uint8_t PIN_SOFTWARE_SERIAL_RECEPTION = 7;
 static const uint8_t PIN_SOFTWARE_SERIAL_TRANSMISSION = 6;
 
+static const int INPUT_MAX_COUNT = 4;
+
+static const int REQUEST_MIN_LENGTH = 1;
 static const int REQUEST_MAX_LENGTH = 2;
 
-static const int INPUT_MAX_COUNT = 3;
-static const int INPUT_MIN_LENGTH = 3;
-static const int INPUT_MAX_LENGTH = 16;
+static const int INPUT_PARAMETER_MAX_COUNT = 3;
+static const int INPUT_PARAMETER_MIN_LENGTH = 3;
+static const int INPUT_PARAMETER_MAX_LENGTH = 16;
 
 //EEPROM constants
 static const uint16_t EEPROM_USER_LENGTH = 35;
 static const uint16_t EEPROM_TABLE_LENGTH_ADDRESS = 0;
 static const uint16_t EEPROM_TABLE_LENGTH_LENGTH = 1;
 
-
-static const int MESSAGE_MAX_LENGTH = REQUEST_MAX_LENGTH + INPUT_MAX_COUNT * INPUT_MAX_LENGTH + INPUT_MAX_COUNT;
+static const int INPUT_MESSAGE_MAX_LENGTH = REQUEST_MAX_LENGTH + INPUT_PARAMETER_MAX_COUNT * INPUT_PARAMETER_MAX_LENGTH + INPUT_PARAMETER_MAX_COUNT;
 
 static const char MESSAGE_BEGIN = '$';
-static const char MESSAGE_PARAMETERS_SEPARATOR = '#';
+static const char MESSAGE_INPUTS_SEPARATOR = '#';
 static const char MESSAGE_END = '*';
 
 static const long int BAUD_RATE_BLUETOOTH = 9600;
@@ -125,17 +126,16 @@ static const Ttl INITIAL_TTL = 40;
 static const Username ADMIN_DEFAULT_USERNAME = "admin";
 static const Password ADMIN_DEFAULT_PASSWORD = "12345";
 
-static const Humidity UNKNOWN_HUMIDITY = -1;
-static const Temperature UNKNOWN_TEMPERATURE = 0;
+static const Humidity HUMIDITY_UNKNOWN = -1;
+static const Temperature TEMPERATURE_UNKNOWN = 0;
 
-static const LightIntensity LIGHT_INTENSITY_THRESHOLD = 280;
+static const LightIntensity LIGHT_INTENSITY_AVERAGE_THRESHOLD = 100;
+static const LightIntensity LIGHT_INTENSITY_MAX = 1023;
+static const LightIntensity LIGHT_INTENSITY_QUEUE_CAPACITY = 10;
 
 static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
     // Milliseconds
     // The order of the elements is important
-#ifdef DEBUG_MODE
-    0, // BLUETOOTH_CHECK
-#endif /* DEBUG_MODE */
     2000, // DHT_MEASUREMENT
     1000, // LIGHT_INTENSITY_MEASUREMENT
     5000 // TTL_EXPIRATION
@@ -145,6 +145,7 @@ static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
 #include "CommunicationModule.h"
 #include "DhtSensor.h"
 #include "Light.h"
+#include "LightIntensityQueue.h"
 #include "LightSensor.h"
 #include "Lock.h"
 #include "LoginTable.h"

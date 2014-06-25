@@ -19,7 +19,7 @@ public:
 private:
     static UserTableEntry entries[CAPACITY_USER_TABLE];
     static void updateEEPROM(Username username,Password password, Role role, int index);
-    static int length;
+    static uint8_t length;
 };
 
 #endif /* USER_TABLE */

@@ -1,7 +1,7 @@
 #include "LoginTable.h"
 
 LoginTableEntry LoginTable::entries[CAPACITY_LOGIN_TABLE];
-int LoginTable::length;
+uint8_t LoginTable::length;
 
 void LoginTable::addEntry(Username username, Ttl ttl) {
     if (length == CAPACITY_LOGIN_TABLE)

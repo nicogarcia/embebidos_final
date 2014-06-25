@@ -17,7 +17,7 @@ public:
     static void removeEntry(Username username);
 private:
     static LoginTableEntry entries[CAPACITY_LOGIN_TABLE];
-    static int length;
+    static uint8_t length;
 };
 
 #endif /* LOGIN_TABLE */
