@@ -10,7 +10,7 @@
 #define forn(i, n) for (int i = 0; i < (int) (n); ++i)
 #define forsn(i, s, n) for (int i = (int) (s); i < (int) (n); ++i)
 
-//TODO: change from int to uint_8??
+//TODO: change from int to uint8_t??
 typedef int Event;
 typedef int Humidity;
 typedef int LightIntensity;
@@ -101,6 +101,12 @@ static const int REQUEST_MAX_LENGTH = 2;
 static const int INPUT_MAX_COUNT = 3;
 static const int INPUT_MIN_LENGTH = 3;
 static const int INPUT_MAX_LENGTH = 16;
+
+//EEPROM constants
+static const uint16_t EEPROM_USER_LENGTH = 35;
+static const uint16_t EEPROM_TABLE_LENGTH_ADDRESS = 0;
+static const uint16_t EEPROM_TABLE_LENGTH_LENGTH = 1;
+
 
 static const int MESSAGE_MAX_LENGTH = REQUEST_MAX_LENGTH + INPUT_MAX_COUNT * INPUT_MAX_LENGTH + INPUT_MAX_COUNT;
 

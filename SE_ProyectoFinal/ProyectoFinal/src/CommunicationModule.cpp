@@ -137,7 +137,7 @@ void CommunicationModule::processMessage() {
     Request request = 0;
     Input inputs[INPUT_MAX_COUNT];
     for (int i = 0; i<INPUT_MAX_COUNT; i++)
-        inputs = "";
+        inputs[i] = "";
     switch(message_inputs) {
     case 1: {
         sscanf(message, "%i#%s", request, &inputs[0]);
@@ -152,6 +152,7 @@ void CommunicationModule::processMessage() {
     }
     }
     // TODO: usar REQUEST_MAX_LENGTH para procesar el request (pueden ser dos d�gitos)
+
 }
 
 void CommunicationModule::readCharacter() {

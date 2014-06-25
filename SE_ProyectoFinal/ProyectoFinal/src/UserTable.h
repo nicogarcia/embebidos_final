@@ -13,8 +13,10 @@ public:
     static bool isFull();
     static void removeEntry(int index);
     static void removeEntry(Username username);
+    static void readEEPROM();
 private:
     static UserTableEntry entries[CAPACITY_USER_TABLE];
+    static void updateEEPROM(Username username,Password password, Role role, int index);
     static int length;
 };
 
