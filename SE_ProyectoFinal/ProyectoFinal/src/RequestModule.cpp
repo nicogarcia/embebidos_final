@@ -1,72 +1,88 @@
 #include "RequestModule.h"
 
-void RequestModule::serveRequest(Request request, Input input[INPUT_MAX_COUNT]) {
-    // Validates the input
-    if (! validateInput(request, input)) {
-        // The input is invalid
+void RequestModule::serveRequest(Input inputs[INPUT_MAX_COUNT]) {
+    // Validates the request
+    if (! AuxiliarModule::isValidRequest(inputs[0])) {
+        // The request is invalid
         CommunicationModule::sendErrorResponse(INVALID_INPUT);
         return;
     }
 
-    // Authorizes the request
-    if (! SecurityModule::authorizeRequest(request, input)) {
-        // The request has not been authorized
-        CommunicationModule::sendErrorResponse(UNAUTHORIZED);
+    // Parses the request
+    Request request = inputs[0].toInt();
+
+    // Validates the petitioner username
+    if (! AuxiliarModule::isValidUsername(inputs[1])) {
+        // The petitioner username is invalid
+        CommunicationModule::sendErrorResponse(INVALID_INPUT);
         return;
     }
 
-    // Serves the request
+    // Validates the remaining input parameters
     switch (request) {
+    case LOGOUT :
+    case REFRESH_TTL :
+    case REQUEST_STATE :
+    case REQUEST_USERS :
+    case TOGGLE_LIGHT :
+    case TOGGLE_LOCK :
+        break;
+
     case ADD_USER : {
-        addUser(input[1], input[2]);
+        if (! AuxiliarModule::isValidUsername(inputs[2])) {
+            CommunicationModule::sendErrorResponse(INVALID_INPUT);
+            return;
+        }
+
+        if (! AuxiliarModule::isValidPassword(inputs[3])) {
+            CommunicationModule::sendErrorResponse(INVALID_INPUT);
+            return;
+        }
+
         break;
     }
 
     case CHANGE_PASSWORD : {
-        changePassword(input[0], input[1]);
+        if (! AuxiliarModule::isValidPassword(inputs[2])) {
+            CommunicationModule::sendErrorResponse(INVALID_INPUT);
+            return;
+        }
+
         break;
     }
 
     case LOGIN : {
-        login(input[0], input[1]);
-        break;
-    }
+        if (! AuxiliarModule::isValidPassword(inputs[2])) {
+            CommunicationModule::sendErrorResponse(INVALID_INPUT);
+            return;
+        }
 
-    case LOGOUT : {
-        logout(input[0]);
-        break;
-    }
-
-    case REFRESH_TTL : {
-        refreshTtl(input[0]);
         break;
     }
 
     case REMOVE_USER : {
-        removeUser(input[1]);
+        if (! AuxiliarModule::isValidUsername(inputs[2])) {
+            CommunicationModule::sendErrorResponse(INVALID_INPUT);
+            return;
+        }
+
         break;
     }
 
-    case REQUEST_STATE : {
-        requestState();
-        break;
+    default : {
+        // Invalid request
+        CommunicationModule::sendErrorResponse(INVALID_INPUT);
+        return;
+    }
     }
 
-    case REQUEST_USERS : {
-        requestUsers();
-        break;
-    }
+    // Gets the input parameters
+    InputParameter input_parameters[INPUT_PARAMETER_MAX_COUNT];
+    forn (i, INPUT_PARAMETER_MAX_COUNT)
+    input_parameters[i] = inputs[i + 1];
 
-    case TOGGLE_LIGHT : {
-        toggleLight();
-        break;
-    }
-
-    case TOGGLE_LOCK : {
-        toggleLock();
-        break;
-    }
-    }
+    // Serves the request safely
+    serveRequestSafely(request, input_parameters);
 }
 
 void RequestModule::addUser(Username username, Password password) {
@@ -111,7 +127,7 @@ void RequestModule::login(Username username, Password password) {
         // The user was authenticated
         UserModule::loginUser(username);
 
-    Parameter logged_in_parameter = user_authenticated ? LOGGED_IN : NOT_LOGGED_IN;
+    OutputParameter logged_in_parameter = user_authenticated ? LOGGED_IN : NOT_LOGGED_IN;
 
     // Sends a success response with the result of the operation
     CommunicationModule::sendLoginResponse(logged_in_parameter);
@@ -149,9 +165,9 @@ void RequestModule::removeUser(Username username) {
 
 void RequestModule::requestState() {
     // Gets the information of the state of the system
-    Parameter lock_closed_parameter = StateModule::isLockClosed() ? LOCK_CLOSED : LOCK_OPENED;
-    Parameter light_off_parameter = StateModule::isLightOff() ? LIGHT_OFF : LIGHT_ON;
-    Parameter light_disabled_parameter = StateModule::isLightDisabled() ? LIGHT_DISABLED : LIGHT_ENABLED;
+    OutputParameter lock_closed_parameter = StateModule::isLockClosed() ? LOCK_CLOSED : LOCK_OPENED;
+    OutputParameter light_off_parameter = StateModule::isLightOff() ? LIGHT_OFF : LIGHT_ON;
+    OutputParameter light_disabled_parameter = StateModule::isLightDisabled() ? LIGHT_DISABLED : LIGHT_ENABLED;
     Temperature temperature = StateModule::getTemperature();
     Humidity humidity = StateModule::getHumidity();
 
@@ -168,6 +184,68 @@ void RequestModule::requestUsers() {
     CommunicationModule::sendRequestUsersResponse(user_count, usernames);
 }
 
+void RequestModule::serveRequestSafely(Request request, InputParameter input_parameters[INPUT_PARAMETER_MAX_COUNT]) {
+    // Authorizes the request
+    if (! SecurityModule::authorizeRequest(request, input_parameters)) {
+        // The request has not been authorized
+        CommunicationModule::sendErrorResponse(UNAUTHORIZED);
+        return;
+    }
+
+    // Serves the request
+    switch (request) {
+    case ADD_USER : {
+        addUser(input_parameters[1], input_parameters[2]);
+        break;
+    }
+
+    case CHANGE_PASSWORD : {
+        changePassword(input_parameters[0], input_parameters[1]);
+        break;
+    }
+
+    case LOGIN : {
+        login(input_parameters[0], input_parameters[1]);
+        break;
+    }
+
+    case LOGOUT : {
+        logout(input_parameters[0]);
+        break;
+    }
+
+    case REFRESH_TTL : {
+        refreshTtl(input_parameters[0]);
+        break;
+    }
+
+    case REMOVE_USER : {
+        removeUser(input_parameters[1]);
+        break;
+    }
+
+    case REQUEST_STATE : {
+        requestState();
+        break;
+    }
+
+    case REQUEST_USERS : {
+        requestUsers();
+        break;
+    }
+
+    case TOGGLE_LIGHT : {
+        toggleLight();
+        break;
+    }
+
+    case TOGGLE_LOCK : {
+        toggleLock();
+        break;
+    }
+    }
+}
+
 void RequestModule::toggleLight() {
     // Disables / enables the light
     StateModule::toggleLight();
@@ -182,54 +260,4 @@ void RequestModule::toggleLock() {
 
     // Sends a success response
     CommunicationModule::sendSuccessResponse();
-}
-
-bool RequestModule::validateInput(Request request, Input input[INPUT_MAX_COUNT]) {
-    if (! AuxiliarModule::isValidUsername(input[0]))
-        // The petitioner username is invalid
-        return false;
-
-    switch (request) {
-    case LOGOUT :
-    case REFRESH_TTL :
-    case REQUEST_STATE :
-    case REQUEST_USERS :
-    case TOGGLE_LIGHT :
-    case TOGGLE_LOCK :
-        return true;
-
-    case ADD_USER : {
-        if (! AuxiliarModule::isValidUsername(input[1]))
-            return false;
-
-        if (! AuxiliarModule::isValidPassword(input[2]))
-            return false;
-
-        return true;
-    }
-
-    case CHANGE_PASSWORD : {
-        if (! AuxiliarModule::isValidPassword(input[1]))
-            return false;
-
-        return true;
-    }
-
-    case LOGIN : {
-        if (! AuxiliarModule::isValidPassword(input[1]))
-            return false;
-
-        return true;
-    }
-
-    case REMOVE_USER : {
-        if (! AuxiliarModule::isValidUsername(input[1]))
-            return false;
-
-        return true;
-    }
-
-    default :
-        return false; // Invalid request
-    }
 }

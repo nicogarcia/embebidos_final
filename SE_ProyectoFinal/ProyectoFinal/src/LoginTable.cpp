@@ -1,7 +1,7 @@
 #include "LoginTable.h"
 
 LoginTableEntry LoginTable::entries[CAPACITY_LOGIN_TABLE];
-int LoginTable::length = 0;
+int LoginTable::length;
 
 void LoginTable::addEntry(Username username, Ttl ttl) {
     if (length == CAPACITY_LOGIN_TABLE)
@@ -42,6 +42,14 @@ int LoginTable::getEntryIndex(Username username) {
 
 int LoginTable::getLength() {
     return length;
+}
+
+void LoginTable::initialize() {
+    length = 0;
+}
+
+bool LoginTable::isEmpty() {
+    return length == 0;
 }
 
 bool LoginTable::isFull() {

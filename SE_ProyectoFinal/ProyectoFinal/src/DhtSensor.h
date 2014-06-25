@@ -7,6 +7,7 @@ class DhtSensor {
 public:
     static Humidity getHumidity();
     static Temperature getTemperature();
+    static void initialize();
     static void measure();
 private:
     static dht sensor;

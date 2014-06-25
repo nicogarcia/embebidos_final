@@ -59,6 +59,16 @@ int UserModule::getUserUsernames(Username usernames[CAPACITY_USER_TABLE]) {
     return user_count;
 }
 
+void UserModule::initialize() {
+    // Modules initializations
+    LoginTable::initialize();
+    UserTable::initialize();
+
+    if (UserTable::isEmpty())
+        // There are no users: adds a default administrator
+        addUser(ADMIN_DEFAULT_USERNAME, ADMIN_DEFAULT_PASSWORD, ADMIN);
+}
+
 bool UserModule::isLoginTableFull() {
     return LoginTable::isFull();
 }

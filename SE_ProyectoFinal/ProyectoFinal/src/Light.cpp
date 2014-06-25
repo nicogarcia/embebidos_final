@@ -14,6 +14,11 @@ void Light::enable() {
     is_disabled = false;
 }
 
+void Light::initialize() {
+    // Sets the light pin as an output
+    pinMode(PIN_LIGHT, OUTPUT);
+}
+
 bool Light::isDisabled() {
     return is_disabled;
 }

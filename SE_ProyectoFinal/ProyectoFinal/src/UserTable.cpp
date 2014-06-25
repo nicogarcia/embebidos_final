@@ -3,7 +3,7 @@
 
 
 UserTableEntry UserTable::entries[CAPACITY_USER_TABLE];
-int UserTable::length = 0;
+int UserTable::length;
 
 void UserTable::addEntry(Username username, Password password, Role role) {
     if (length == CAPACITY_USER_TABLE)
@@ -45,6 +45,14 @@ int UserTable::getEntryIndex(Username username) {
 
 int UserTable::getLength() {
     return length;
+}
+
+void UserTable::initialize() {
+    length = 0;
+}
+
+bool UserTable::isEmpty() {
+    return length == 0;
 }
 
 bool UserTable::isFull() {

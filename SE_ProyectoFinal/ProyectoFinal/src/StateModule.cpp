@@ -16,12 +16,26 @@ Humidity StateModule::getHumidity() {
     return DhtSensor::getHumidity();
 }
 
-LightIntensity StateModule::getLightIntensity() {
-    return LightSensor::getLightIntensity();
+LightIntensity StateModule::getLightIntensityAverage() {
+    return LightSensor::getLightIntensityAverage();
 }
 
 Temperature StateModule::getTemperature() {
     return DhtSensor::getTemperature();
+}
+
+void StateModule::initialize() {
+    // Modules initializations
+    DhtSensor::initialize();
+    Light::initialize();
+    LightSensor::initialize();
+    Lock::initialize();
+
+    // State initialization tasks
+    closeLock();
+    disableLight();
+    measureLightIntensity();
+    measureTemperatureAndHumidity();
 }
 
 bool StateModule::isLightDisabled() {

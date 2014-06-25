@@ -5,7 +5,7 @@
 
 class SecurityModule {
 public:
-    static bool authorizeRequest(Request request, Input input[INPUT_MAX_COUNT]);
+    static bool authorizeRequest(Request request, InputParameter input_parameters[INPUT_PARAMETER_MAX_COUNT]);
 };
 
 #endif /* SECURITY_MODULE */

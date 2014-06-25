@@ -5,6 +5,7 @@ void setup() {
 }
 
 void loop() {
+    CommunicationModule::readRequest();
     MainModule::checkEvent();
 }
 
@@ -23,13 +24,6 @@ void MainModule::checkEvent() {
         // It's time to check the current event
 
         switch (current_event) {
-#ifdef DEBUG_MODE
-        case BLUETOOTH_CHECK : {
-            bluetoothCheckEvent();
-            break;
-        }
-#endif /* DEBUG_MODE */
-
         case DHT_MEASUREMENT : {
             dhtMeasurementEvent();
             break;
@@ -55,36 +49,32 @@ void MainModule::checkEvent() {
 }
 
 void MainModule::initialize() {
-    // Pin modes
-    pinMode(PIN_LIGHT, OUTPUT);
-    pinMode(PIN_LOCK, OUTPUT);
-
-    // Communication initialization tasks
+    // Modules initializations
     CommunicationModule::initialize();
-#ifdef DEBUG_MODE
-    Serial.begin(BAUD_RATE_TERMINAL);
-    Serial.println("Hello from SISAD");
-#endif /* DEBUG_MODE */
-
-    // State initialization tasks
-    StateModule::closeLock();
-    StateModule::disableLight();
-    StateModule::measureLightIntensity();
-    StateModule::measureTemperatureAndHumidity();
-
-    // Adds a default administrator
-    UserModule::addUser(ADMIN_DEFAULT_USERNAME, ADMIN_DEFAULT_PASSWORD, ADMIN); // TODO: to define: are we going to use some non-volatile storage?
+    StateModule::initialize();
+    UserModule::initialize();
 
     // Initializes the event times
     forn (i, EVENT_COUNT)
     event_times[i] = 0;
-}
 
-#ifdef DEBUG_MODE
-void MainModule::bluetoothCheckEvent() {
-    CommunicationModule::serialEvent();
+
+
+
+
+
+    // TODO: debug commands (remove them)
+    /*Input inputs[INPUT_MAX_COUNT];
+
+    inputs[0] = "2"; // LOGIN
+    inputs[1] = ADMIN_DEFAULT_USERNAME;
+    inputs[2] = ADMIN_DEFAULT_PASSWORD;
+    RequestModule::serveRequest(inputs);
+
+    inputs[0] = "6"; // REQUEST_STATE
+    inputs[1] = ADMIN_DEFAULT_USERNAME;
+    RequestModule::serveRequest(inputs);*/
 }
-#endif /* DEBUG_MODE */
 
 void MainModule::dhtMeasurementEvent() {
     // Measures the temperature and humidity
@@ -99,9 +89,9 @@ void MainModule::lightIntensityMeasurementEvent() {
         // Light is enabled
 
         // Gets the light intensity
-        LightIntensity light_intensity = StateModule::getLightIntensity();
+        LightIntensity light_intensity = StateModule::getLightIntensityAverage();
 
-        if (light_intensity < LIGHT_INTENSITY_THRESHOLD)
+        if (light_intensity < LIGHT_INTENSITY_AVERAGE_THRESHOLD)
             // The environment is too dark
             StateModule::turnOnLight();
         else
