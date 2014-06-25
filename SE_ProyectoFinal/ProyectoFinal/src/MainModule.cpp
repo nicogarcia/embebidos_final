@@ -5,10 +5,7 @@ void setup() {
 }
 
 void loop() {
-#ifdef DEBUG_MODE
-    CommunicationModule::serialEvent();
-#endif /* DEBUG_MODE */
-
+    CommunicationModule::readRequest();
     MainModule::checkEvent();
 }
 

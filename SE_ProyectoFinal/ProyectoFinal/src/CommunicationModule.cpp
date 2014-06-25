@@ -1,17 +1,6 @@
 #include "CommunicationModule.h"
 
-void serialEvent() {
-#ifndef DEBUG_MODE
-    CommunicationModule::serialEvent();
-#endif /* DEBUG_MODE */
-}
-
-#ifdef DEBUG_MODE
-SoftwareSerial CommunicationModule::bluetoothInterface = SoftwareSerial(PIN_SOFTWARE_SERIAL_RECEPTION, PIN_SOFTWARE_SERIAL_TRANSMISSION);
-#else /* DEBUG_MODE */
-HardwareSerial CommunicationModule::bluetoothInterface = Serial;
-#endif /* DEBUG_MODE */
-
+SoftwareSerial CommunicationModule::bluetoothInterface(PIN_SOFTWARE_SERIAL_RECEPTION, PIN_SOFTWARE_SERIAL_TRANSMISSION);
 bool CommunicationModule::ignore_message;
 char CommunicationModule::message_buffer[MESSAGE_MAX_LENGTH];
 int CommunicationModule::message_index;
@@ -28,6 +17,12 @@ void CommunicationModule::initialize() {
     Serial.begin(BAUD_RATE_TERMINAL);
     Serial.println("Hello from SISAD");
 #endif /* DEBUG_MODE */
+}
+
+void CommunicationModule::readRequest() {
+    while (bluetoothInterface.available() > 0)
+        // There are characters unread
+        readCharacter();
 }
 
 void CommunicationModule::sendErrorResponse(OutputParameter error_parameter) {
@@ -120,12 +115,6 @@ void CommunicationModule::sendSuccessResponse() {
     sendMessage(message);
 }
 
-void CommunicationModule::serialEvent() {
-    while (bluetoothInterface.available() > 0)
-        // There are characters unread
-        readCharacter();
-}
-
 void CommunicationModule::processMessage() {
     Input inputs[INPUT_MAX_COUNT];
 
@@ -151,6 +140,10 @@ void CommunicationModule::processMessage() {
 void CommunicationModule::readCharacter() {
     char character = bluetoothInterface.read();
 
+#ifdef DEBUG_MODE
+    Serial.print("R: " + character);
+#endif /* DEBUG_MODE */
+
     switch (character) {
     case MESSAGE_BEGIN : {
         ignore_message = false;
@@ -159,6 +152,10 @@ void CommunicationModule::readCharacter() {
     }
 
     case MESSAGE_END : {
+#ifdef DEBUG_MODE
+        Serial.println();
+#endif /* DEBUG_MODE */
+
         if (! ignore_message) {
             // Ignores characters until a MESSAGE_BEGIN is received
             ignore_message = true;
@@ -184,13 +181,15 @@ void CommunicationModule::readCharacter() {
 }
 
 void CommunicationModule::sendMessage(String message) {
-    // TODO: actually send the message (Serial)
-#ifdef DEBUG
-    Serial.println(message);
-#endif /* DEBUG */
+#ifdef DEBUG_MODE
+    Serial.println("T: " + message);
+#endif /* DEBUG_MODE */
 
-    int size = message.length();
-    char message_char[size];
-    message.toCharArray(message_char, size, 0);
-    bluetoothInterface.write(message_char);
+    // Gets the message bytes
+    int byte_count = message.length();
+    byte bytes[byte_count];
+    message.getBytes(bytes, byte_count);
+
+    // Sends the message bytes
+    bluetoothInterface.write(bytes, byte_count);
 }

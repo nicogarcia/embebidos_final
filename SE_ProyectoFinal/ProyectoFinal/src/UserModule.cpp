@@ -65,7 +65,7 @@ void UserModule::initialize() {
     UserTable::initialize();
 
     if (UserTable::isEmpty())
-        // Adds a default administrator
+        // There are no users: adds a default administrator
         addUser(ADMIN_DEFAULT_USERNAME, ADMIN_DEFAULT_PASSWORD, ADMIN);
 }
 
