@@ -76,7 +76,7 @@ bool AuxiliarModule::isValidInputParameterCharacter(char character) {
 
 void AuxiliarModule::stringToCharArray( String string, char *array ) {
     forn (i, string.length())
-    message_array[i] = message.charAt(i);
+    array[i] = string.charAt(i);
 
     array[string.length()+1] = '\0';
 }

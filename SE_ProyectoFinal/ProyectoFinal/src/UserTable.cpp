@@ -99,7 +99,7 @@ void UserTable::updateEEPROM( Username username,Password password, Role role, in
 
     while (!eeprom_is_ready())
         ;
-    stringtoCharArray(username,aux);
+    AuxiliarModule::stringToCharArray(username,aux);
     //set of address for username
     forn(i,username.length()+1)
     usernameAddresses[i] = base_address + i;
@@ -110,7 +110,7 @@ void UserTable::updateEEPROM( Username username,Password password, Role role, in
     while (!eeprom_is_ready())
         ;
     base_address += INPUT_PARAMETER_MAX_LENGTH + 1;
-    stringtoCharArray(password,aux);
+    AuxiliarModule::stringToCharArray(password,aux);
     //set of address for password
     forn(i,password.length()+1)
     passwordAddresses[i] = base_address + i;
