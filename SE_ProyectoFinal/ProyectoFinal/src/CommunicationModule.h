@@ -15,7 +15,7 @@ public:
 private:
     static SoftwareSerial bluetoothInterface;
     static bool ignore_message;
-    static char message_buffer[MESSAGE_MAX_LENGTH];
+    static char message_buffer[INPUT_MESSAGE_MAX_LENGTH];
     static int message_index;
     static void processMessage();
     static void readCharacter();

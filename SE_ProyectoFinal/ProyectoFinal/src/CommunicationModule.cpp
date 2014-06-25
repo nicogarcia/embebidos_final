@@ -2,7 +2,7 @@
 
 SoftwareSerial CommunicationModule::bluetoothInterface(PIN_SOFTWARE_SERIAL_RECEPTION, PIN_SOFTWARE_SERIAL_TRANSMISSION);
 bool CommunicationModule::ignore_message;
-char CommunicationModule::message_buffer[MESSAGE_MAX_LENGTH];
+char CommunicationModule::message_buffer[INPUT_MESSAGE_MAX_LENGTH];
 int CommunicationModule::message_index;
 
 void CommunicationModule::initialize() {
@@ -140,12 +140,13 @@ void CommunicationModule::processMessage() {
 void CommunicationModule::readCharacter() {
     char character = bluetoothInterface.read();
 
-#ifdef DEBUG_MODE
-    Serial.print("R: " + character);
-#endif /* DEBUG_MODE */
-
     switch (character) {
     case MESSAGE_BEGIN : {
+#ifdef DEBUG_MODE
+        Serial.print("R: ");
+        Serial.print(character);
+#endif /* DEBUG_MODE */
+
         ignore_message = false;
         message_index = 0; // Clears the buffer
         break;
@@ -153,7 +154,7 @@ void CommunicationModule::readCharacter() {
 
     case MESSAGE_END : {
 #ifdef DEBUG_MODE
-        Serial.println();
+        Serial.println(character);
 #endif /* DEBUG_MODE */
 
         if (! ignore_message) {
@@ -168,8 +169,12 @@ void CommunicationModule::readCharacter() {
     }
 
     default : {
+#ifdef DEBUG_MODE
+        Serial.print(character);
+#endif /* DEBUG_MODE */
+
         if (! ignore_message) {
-            if (message_index == MESSAGE_MAX_LENGTH)
+            if (message_index == INPUT_MESSAGE_MAX_LENGTH)
                 // The buffer is full
                 ignore_message = true;
             else
@@ -182,14 +187,19 @@ void CommunicationModule::readCharacter() {
 
 void CommunicationModule::sendMessage(String message) {
 #ifdef DEBUG_MODE
-    Serial.println("T: " + message);
+    Serial.print("T: ");
+    Serial.println(message);
 #endif /* DEBUG_MODE */
 
-    // Gets the message bytes
-    int byte_count = message.length();
-    byte bytes[byte_count];
-    message.getBytes(bytes, byte_count);
+    // Parses from string to char array
+    int length = message.length();
+    char message_array[length + 1];
+
+    forn (i, length)
+    message_array[i] = message.charAt(i);
+
+    message_array[length] = '\0';
 
     // Sends the message bytes
-    bluetoothInterface.write(bytes, byte_count);
+    bluetoothInterface.print(message_array);
 }

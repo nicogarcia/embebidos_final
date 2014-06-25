@@ -64,7 +64,7 @@ void MainModule::initialize() {
 
 
     // TODO: debug commands (remove them)
-    Input inputs[INPUT_MAX_COUNT];
+    /*Input inputs[INPUT_MAX_COUNT];
 
     inputs[0] = "2"; // LOGIN
     inputs[1] = ADMIN_DEFAULT_USERNAME;
@@ -73,7 +73,7 @@ void MainModule::initialize() {
 
     inputs[0] = "6"; // REQUEST_STATE
     inputs[1] = ADMIN_DEFAULT_USERNAME;
-    RequestModule::serveRequest(inputs);
+    RequestModule::serveRequest(inputs);*/
 }
 
 void MainModule::dhtMeasurementEvent() {
