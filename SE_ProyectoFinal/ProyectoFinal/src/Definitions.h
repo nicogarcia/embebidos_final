@@ -11,7 +11,7 @@
 #define forsn(i, s, n) for (int i = (int) (s); i < (int) (n); ++i)
 
 typedef uint8_t Event;
-typedef uint8_t Parameter;
+typedef uint8_t OutputParameter;
 typedef uint8_t Request;
 typedef uint8_t Response;
 typedef uint8_t Role;
@@ -24,8 +24,10 @@ typedef int Ttl;
 typedef unsigned long int Time;
 
 typedef String Input;
-typedef String Password;
-typedef String Username;
+typedef String InputParameter;
+
+typedef InputParameter Password;
+typedef InputParameter Username;
 
 typedef struct {
     Username username;
@@ -46,7 +48,7 @@ enum Events {
     EVENT_COUNT // This element should always be kept in the last position
 };
 
-enum Parameters {
+enum OutputParameters {
     INVALID_INPUT = 0,
     LIGHT_DISABLED = 1,
     LIGHT_ENABLED = 2,
@@ -93,16 +95,19 @@ static const uint8_t PIN_LOCK = 12;
 static const uint8_t PIN_SOFTWARE_SERIAL_RECEPTION = 7;
 static const uint8_t PIN_SOFTWARE_SERIAL_TRANSMISSION = 6;
 
+static const int INPUT_MAX_COUNT = 4;
+
+static const int REQUEST_MIN_LENGTH = 1;
 static const int REQUEST_MAX_LENGTH = 2;
 
-static const int INPUT_MAX_COUNT = 3;
-static const int INPUT_MIN_LENGTH = 3;
-static const int INPUT_MAX_LENGTH = 16;
+static const int INPUT_PARAMETER_MAX_COUNT = 3;
+static const int INPUT_PARAMETER_MIN_LENGTH = 3;
+static const int INPUT_PARAMETER_MAX_LENGTH = 16;
 
-static const int MESSAGE_MAX_LENGTH = REQUEST_MAX_LENGTH + INPUT_MAX_COUNT * INPUT_MAX_LENGTH + INPUT_MAX_COUNT;
+static const int MESSAGE_MAX_LENGTH = REQUEST_MAX_LENGTH + INPUT_PARAMETER_MAX_COUNT * INPUT_PARAMETER_MAX_LENGTH + INPUT_PARAMETER_MAX_COUNT;
 
 static const char MESSAGE_BEGIN = '$';
-static const char MESSAGE_PARAMETERS_SEPARATOR = '#';
+static const char MESSAGE_INPUTS_SEPARATOR = '#';
 static const char MESSAGE_END = '*';
 
 static const long int BAUD_RATE_BLUETOOTH = 9600;

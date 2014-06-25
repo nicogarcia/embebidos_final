@@ -48,6 +48,10 @@ void LoginTable::initialize() {
     length = 0;
 }
 
+bool LoginTable::isEmpty() {
+    return length == 0;
+}
+
 bool LoginTable::isFull() {
     return length == CAPACITY_LOGIN_TABLE;
 }

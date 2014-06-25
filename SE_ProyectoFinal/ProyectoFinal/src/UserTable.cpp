@@ -49,6 +49,10 @@ void UserTable::initialize() {
     length = 0;
 }
 
+bool UserTable::isEmpty() {
+    return length == 0;
+}
+
 bool UserTable::isFull() {
     return length == CAPACITY_USER_TABLE;
 }

@@ -12,10 +12,10 @@ public:
     static bool isEmpty();
     static bool isFull();
     static void pop();
-    static void push(LightIntensity element);
+    static void push(LightIntensity light_intensity);
 private:
-    static LightIntensity elements[LIGHT_INTENSITY_QUEUE_CAPACITY];
     static int head;
+    static LightIntensity light_intensities[LIGHT_INTENSITY_QUEUE_CAPACITY];
     static int tail;
 };
 

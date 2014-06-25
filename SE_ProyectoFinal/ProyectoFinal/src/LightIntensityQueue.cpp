@@ -1,7 +1,7 @@
 #include "LightIntensityQueue.h"
 
-LightIntensity LightIntensityQueue::elements[LIGHT_INTENSITY_QUEUE_CAPACITY];
 int LightIntensityQueue::head;
+LightIntensity LightIntensityQueue::light_intensities[LIGHT_INTENSITY_QUEUE_CAPACITY];
 int LightIntensityQueue::tail;
 
 LightIntensity LightIntensityQueue::getBack() {
@@ -9,7 +9,7 @@ LightIntensity LightIntensityQueue::getBack() {
         // The queue is empty
         return 0;
 
-    return elements[tail];
+    return light_intensities[tail];
 }
 
 LightIntensity LightIntensityQueue::getFront() {
@@ -17,7 +17,7 @@ LightIntensity LightIntensityQueue::getFront() {
         // The queue is empty
         return 0;
 
-    return elements[head];
+    return light_intensities[head];
 }
 
 int LightIntensityQueue::getLength() {
@@ -50,14 +50,14 @@ void LightIntensityQueue::pop() {
         return;
 
     if (getLength() == 1) {
-        // The queue has exactly 1 element
+        // The queue has exactly 1 light intensity
         head = -1;
         tail = -1;
     } else
         head = (head + 1) % LIGHT_INTENSITY_QUEUE_CAPACITY;
 }
 
-void LightIntensityQueue::push(LightIntensity element) {
+void LightIntensityQueue::push(LightIntensity light_intensity) {
     if (isFull())
         // The queue is full
         return;
@@ -69,5 +69,5 @@ void LightIntensityQueue::push(LightIntensity element) {
     } else
         tail = (tail + 1) % LIGHT_INTENSITY_QUEUE_CAPACITY;
 
-    elements[tail] = element;
+    light_intensities[tail] = light_intensity;
 }

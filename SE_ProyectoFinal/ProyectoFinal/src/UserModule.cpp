@@ -64,8 +64,9 @@ void UserModule::initialize() {
     LoginTable::initialize();
     UserTable::initialize();
 
-    // Adds a default administrator
-    addUser(ADMIN_DEFAULT_USERNAME, ADMIN_DEFAULT_PASSWORD, ADMIN); // TODO: to define: are we going to use some non-volatile storage?
+    if (UserTable::isEmpty())
+        // Adds a default administrator
+        addUser(ADMIN_DEFAULT_USERNAME, ADMIN_DEFAULT_PASSWORD, ADMIN);
 }
 
 bool UserModule::isLoginTableFull() {

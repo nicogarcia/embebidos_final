@@ -60,6 +60,23 @@ void MainModule::initialize() {
     // Initializes the event times
     forn (i, EVENT_COUNT)
     event_times[i] = 0;
+
+
+
+
+
+
+    // TODO: debug commands (remove them)
+    Input inputs[INPUT_MAX_COUNT];
+
+    inputs[0] = "2"; // LOGIN
+    inputs[1] = ADMIN_DEFAULT_USERNAME;
+    inputs[2] = ADMIN_DEFAULT_PASSWORD;
+    RequestModule::serveRequest(inputs);
+
+    inputs[0] = "6"; // REQUEST_STATE
+    inputs[1] = ADMIN_DEFAULT_USERNAME;
+    RequestModule::serveRequest(inputs);
 }
 
 void MainModule::dhtMeasurementEvent() {
