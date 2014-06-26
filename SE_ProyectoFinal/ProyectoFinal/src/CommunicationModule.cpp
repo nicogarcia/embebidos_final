@@ -3,6 +3,7 @@
 SoftwareSerial CommunicationModule::bluetoothInterface(PIN_SOFTWARE_SERIAL_RECEPTION, PIN_SOFTWARE_SERIAL_TRANSMISSION);
 bool CommunicationModule::ignore_message;
 char CommunicationModule::message_buffer[INPUT_MESSAGE_MAX_LENGTH];
+InputParameter CommunicationModule::inputs[INPUT_MAX_COUNT];
 int CommunicationModule::message_index;
 
 void CommunicationModule::initialize() {
@@ -20,7 +21,7 @@ void CommunicationModule::initialize() {
 }
 
 void CommunicationModule::readRequest() {
-    while (bluetoothInterface.available() > 0)
+    while(bluetoothInterface.available() > 0)
         // There are characters unread
         readCharacter();
 }
@@ -91,7 +92,7 @@ void CommunicationModule::sendRequestUsersResponse(int user_count, Username user
     message += response;
     message += MESSAGE_INPUTS_SEPARATOR;
     message += user_count;
-    forn (i, user_count) {
+    forn(i, user_count) {
         message += MESSAGE_INPUTS_SEPARATOR;
         message += usernames[i];
     }
@@ -116,22 +117,27 @@ void CommunicationModule::sendSuccessResponse() {
 }
 
 void CommunicationModule::processMessage() {
-    Input inputs[INPUT_MAX_COUNT];
 
     // Initializes the inputs as empty strings
-    forn (i, INPUT_MAX_COUNT)
-    inputs[i] = "";
+    forn(i, INPUT_MAX_COUNT)
+    inputs[i][0] = '\0';
 
     int inputs_index = 0;
-    forn (i, message_index)
-    if (message_buffer[i] == MESSAGE_INPUTS_SEPARATOR) {
-        inputs_index++;
+    int write_index = 0;
+    forn(i, message_index) {
+        if(message_buffer[i] == MESSAGE_INPUTS_SEPARATOR) {
+            inputs[inputs_index][write_index] = '\0';
+            write_index = 0;
+            inputs_index++;
 
-        if (inputs_index == INPUT_MAX_COUNT)
-            // There are too many inputs: ignores the message
-            return;
-    } else
-        inputs[inputs_index] += message_buffer[i];
+            if(inputs_index == INPUT_MAX_COUNT)
+                // There are too many inputs: ignores the message
+                return;
+        } else {
+            //TODO check write index < INPUT_MAX_LENGTH
+            inputs[inputs_index][write_index++] = message_buffer[i];
+        }
+    }
 
     // Serves the request
     RequestModule::serveRequest(inputs);
@@ -140,48 +146,48 @@ void CommunicationModule::processMessage() {
 void CommunicationModule::readCharacter() {
     char character = bluetoothInterface.read();
 
-    switch (character) {
+    switch(character) {
     case MESSAGE_BEGIN : {
 #ifdef DEBUG_MODE
-        Serial.print("R: ");
-        Serial.print(character);
+            Serial.print("R: ");
+            Serial.print(character);
 #endif /* DEBUG_MODE */
 
-        ignore_message = false;
-        message_index = 0; // Clears the buffer
-        break;
-    }
+            ignore_message = false;
+            message_index = 0; // Clears the buffer
+            break;
+        }
 
     case MESSAGE_END : {
 #ifdef DEBUG_MODE
-        Serial.println(character);
+            Serial.println(character);
 #endif /* DEBUG_MODE */
 
-        if (! ignore_message) {
-            // Ignores characters until a MESSAGE_BEGIN is received
-            ignore_message = true;
+            if(! ignore_message) {
+                // Ignores characters until a MESSAGE_BEGIN is received
+                ignore_message = true;
 
-            // Processes the message
-            processMessage();
+                // Processes the message
+                processMessage();
+            }
+
+            break;
         }
-
-        break;
-    }
 
     default : {
 #ifdef DEBUG_MODE
-        Serial.print(character);
+            Serial.print(character);
 #endif /* DEBUG_MODE */
 
-        if (! ignore_message) {
-            if (message_index == INPUT_MESSAGE_MAX_LENGTH)
-                // The buffer is full
-                ignore_message = true;
-            else
-                // Buffers the character
-                message_buffer[message_index++] = character;
+            if(! ignore_message) {
+                if(message_index == INPUT_MESSAGE_MAX_LENGTH)
+                    // The buffer is full
+                    ignore_message = true;
+                else
+                    // Buffers the character
+                    message_buffer[message_index++] = character;
+            }
         }
-    }
     }
 }
 
@@ -195,7 +201,7 @@ void CommunicationModule::sendMessage(String message) {
     int length = message.length();
     char message_array[length + 1];
 
-    forn (i, length)
+    forn(i, length)
     message_array[i] = message.charAt(i);
 
     message_array[length] = '\0';

@@ -5,7 +5,7 @@
 
 class RequestModule {
 public:
-    static void serveRequest(Input inputs[INPUT_MAX_COUNT]);
+    static void serveRequest(InputParameter inputs[INPUT_MAX_COUNT]);
 private:
     static void addUser(Username username, Password password);
     static void changePassword(Username username, Password password);

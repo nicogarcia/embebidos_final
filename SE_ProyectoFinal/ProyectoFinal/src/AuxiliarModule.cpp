@@ -1,25 +1,25 @@
 #include "AuxiliarModule.h"
 
-bool AuxiliarModule::isValidPassword(String password) {
+bool AuxiliarModule::isValidPassword(char* password) {
     return isValidInputParameter(password);
 }
 
-bool AuxiliarModule::isValidRequest(String request) {
+bool AuxiliarModule::isValidRequest(char* request) {
     // Gets the request length
-    int length = request.length();
+    int length = strlen(request);
 
-    if (length < REQUEST_MIN_LENGTH)
+    if(length < REQUEST_MIN_LENGTH)
         // Request too short
         return false;
 
-    if (length > REQUEST_MAX_LENGTH)
+    if(length > REQUEST_MAX_LENGTH)
         // Request too long
         return false;
 
-    forn (i, length) {
-        char character = request.charAt(i);
+    forn(i, length) {
+        char character = request[i];
 
-        if (character < '0' || character > '9')
+        if(character < '0' || character > '9')
             // The character is not a decimal digit
             return false;
     }
@@ -28,24 +28,24 @@ bool AuxiliarModule::isValidRequest(String request) {
     return true;
 }
 
-bool AuxiliarModule::isValidUsername(String username) {
+bool AuxiliarModule::isValidUsername(char* username) {
     return isValidInputParameter(username);
 }
 
-bool AuxiliarModule::isValidInputParameter(String input_parameter) {
+bool AuxiliarModule::isValidInputParameter(char* input_parameter) {
     // Gets the input parameter length
-    int length = input_parameter.length();
+    int length = strlen(input_parameter);
 
-    if (length < INPUT_PARAMETER_MIN_LENGTH)
+    if(length < INPUT_PARAMETER_MIN_LENGTH)
         // Input parameter too short
         return false;
 
-    if (length > INPUT_PARAMETER_MAX_LENGTH)
+    if(length > INPUT_PARAMETER_MAX_LENGTH)
         // Input parameter too long
         return false;
 
-    forn (i, length)
-    if (! isValidInputParameterCharacter(input_parameter.charAt(i)))
+    forn(i, length)
+    if(! isValidInputParameterCharacter(input_parameter[i]))
         // The input parameter has at least one invalid character
         return false;
 
@@ -54,19 +54,19 @@ bool AuxiliarModule::isValidInputParameter(String input_parameter) {
 }
 
 bool AuxiliarModule::isValidInputParameterCharacter(char character) {
-    if (character >= 'a' && character <= 'z')
+    if(character >= 'a' && character <= 'z')
         // a-z
         return true;
 
-    if (character >= 'A' && character <= 'Z')
+    if(character >= 'A' && character <= 'Z')
         // A-Z
         return true;
 
-    if (character >= '0' && character <= '9')
+    if(character >= '0' && character <= '9')
         // 0-9
         return true;
 
-    if (character == '_')
+    if(character == '_')
         // _ (underscore)
         return true;
 
@@ -74,9 +74,9 @@ bool AuxiliarModule::isValidInputParameterCharacter(char character) {
     return false;
 }
 
-void AuxiliarModule::stringToCharArray( String string, char *array ) {
-    forn (i, string.length())
+void AuxiliarModule::stringToCharArray(String string, char *array) {
+    forn(i, string.length())
     array[i] = string.charAt(i);
 
-    array[string.length()+1] = '\0';
+    array[string.length() + 1] = '\0';
 }

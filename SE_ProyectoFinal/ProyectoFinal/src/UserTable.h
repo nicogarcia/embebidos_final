@@ -5,7 +5,7 @@
 
 class UserTable {
 public:
-    static void addEntry(Username username, Password password, Role role);
+    static void addEntry(const Username username, const Password password, Role role);
     static UserTableEntry *getEntries();
     static UserTableEntry *getEntry(Username username);
     static int getEntryIndex(Username username);
@@ -18,7 +18,7 @@ public:
     static void readEEPROM();
 private:
     static UserTableEntry entries[CAPACITY_USER_TABLE];
-    static void updateEEPROM(Username username,Password password, Role role, int index);
+    static void updateEEPROM(const Username username, const Password password, Role role, int index);
     static uint8_t length;
 };
 

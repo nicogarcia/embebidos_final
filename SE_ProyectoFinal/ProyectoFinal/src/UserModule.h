@@ -5,7 +5,7 @@
 
 class UserModule {
 public:
-    static void addUser(Username username, Password password, Role role);
+    static void addUser(const Username username, const Password password, Role role);
     static bool authenticateUser(Username username, Password password);
     static void autoLogoutUsers();
     static void changeUserPassword(Username username, Password password);

@@ -2,7 +2,7 @@
 #define DEFINITIONS
 
 #define DEBUG_MODE
-#define FIRST_USE_MODE
+//#define FIRST_USE_MODE
 
 #include <Arduino.h>
 #include "SoftwareSerial.h"
@@ -24,8 +24,25 @@ typedef int Ttl;
 
 typedef unsigned long int Time;
 
-typedef String Input;
-typedef String InputParameter;
+//TODO
+static const int INPUT_MAX_COUNT = 4;
+
+static const int REQUEST_MIN_LENGTH = 1;
+static const int REQUEST_MAX_LENGTH = 2;
+
+static const int INPUT_PARAMETER_MAX_COUNT = 3;
+static const int INPUT_PARAMETER_MIN_LENGTH = 3;
+static const int INPUT_PARAMETER_MAX_LENGTH = 16;
+
+//EEPROM constants
+static const uint16_t EEPROM_USER_LENGTH = 35;
+static const uint16_t EEPROM_TABLE_LENGTH_ADDRESS = 0;
+static const uint16_t EEPROM_TABLE_LENGTH_LENGTH = 1;
+
+static const int INPUT_MESSAGE_MAX_LENGTH = REQUEST_MAX_LENGTH + INPUT_PARAMETER_MAX_COUNT * INPUT_PARAMETER_MAX_LENGTH + INPUT_PARAMETER_MAX_COUNT;
+
+typedef char Input[INPUT_MESSAGE_MAX_LENGTH];
+typedef char InputParameter[INPUT_PARAMETER_MAX_LENGTH];
 
 typedef InputParameter Password;
 typedef InputParameter Username;
@@ -95,22 +112,6 @@ static const uint8_t PIN_LIGHT_SENSOR = 3;
 static const uint8_t PIN_LOCK = 12;
 static const uint8_t PIN_SOFTWARE_SERIAL_RECEPTION = 7;
 static const uint8_t PIN_SOFTWARE_SERIAL_TRANSMISSION = 6;
-
-static const int INPUT_MAX_COUNT = 4;
-
-static const int REQUEST_MIN_LENGTH = 1;
-static const int REQUEST_MAX_LENGTH = 2;
-
-static const int INPUT_PARAMETER_MAX_COUNT = 3;
-static const int INPUT_PARAMETER_MIN_LENGTH = 3;
-static const int INPUT_PARAMETER_MAX_LENGTH = 16;
-
-//EEPROM constants
-static const uint16_t EEPROM_USER_LENGTH = 35;
-static const uint16_t EEPROM_TABLE_LENGTH_ADDRESS = 0;
-static const uint16_t EEPROM_TABLE_LENGTH_LENGTH = 1;
-
-static const int INPUT_MESSAGE_MAX_LENGTH = REQUEST_MAX_LENGTH + INPUT_PARAMETER_MAX_COUNT * INPUT_PARAMETER_MAX_LENGTH + INPUT_PARAMETER_MAX_COUNT;
 
 static const char MESSAGE_BEGIN = '$';
 static const char MESSAGE_INPUTS_SEPARATOR = '#';
