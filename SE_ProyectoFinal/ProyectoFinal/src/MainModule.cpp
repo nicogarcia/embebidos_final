@@ -58,9 +58,18 @@ void MainModule::initialize() {
     forn (i, EVENT_COUNT)
     event_times[i] = 0;
 
+    Input inputs[INPUT_MAX_COUNT];
 
+    inputs[0] = "2"; // LOGIN
+    inputs[1] = ADMIN_DEFAULT_USERNAME;
+    inputs[2] = ADMIN_DEFAULT_PASSWORD;
+    RequestModule::serveRequest(inputs);
 
-
+    inputs[0] = "0"; // ADD_USER
+    inputs[1] = ADMIN_DEFAULT_USERNAME;
+    inputs[2] = "lala";
+    inputs[3] = "lala";
+    RequestModule::serveRequest(inputs);
 
 
     // TODO: debug commands (remove them)

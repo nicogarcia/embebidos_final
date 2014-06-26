@@ -2,6 +2,7 @@
 #define DEFINITIONS
 
 #define DEBUG_MODE
+#define FIRST_USE_MODE
 
 #include <Arduino.h>
 #include "SoftwareSerial.h"

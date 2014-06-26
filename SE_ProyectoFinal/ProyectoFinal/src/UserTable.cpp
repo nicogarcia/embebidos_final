@@ -15,6 +15,8 @@ void UserTable::addEntry(Username username, Password password, Role role) {
     entries[length].password = password;
     entries[length].role = role;
     length++;
+
+    updateEEPROM(entries[length-1].username,entries[length-1].password,role,length-1);
 }
 
 UserTableEntry *UserTable::getEntries() {
@@ -48,7 +50,12 @@ int UserTable::getLength() {
 }
 
 void UserTable::initialize() {
+#ifdef FIRST_USE_MODE
+    eeprom_write_byte((uint8_t*)EEPROM_TABLE_LENGTH_ADDRESS,0);
+#endif //FIRTS_USE_MODE
+
     length = 0;
+    readEEPROM();
 }
 
 bool UserTable::isEmpty() {
@@ -68,6 +75,7 @@ void UserTable::removeEntry(int index) {
     entries[index] = entries[length - 1];
 
     length--;
+    updateEEPROM(entries[index].username,entries[index].password,entries[index].role,index);
 }
 
 void UserTable::removeEntry(Username username) {
@@ -84,8 +92,6 @@ void UserTable::removeEntry(Username username) {
 
 void UserTable::updateEEPROM( Username username,Password password, Role role, int index) {
 
-    int usernameAddresses[INPUT_PARAMETER_MAX_LENGTH+1];//plus 1 for null char
-    int passwordAddresses[INPUT_PARAMETER_MAX_LENGTH+1];
     //Buffer to put the string
     char aux[INPUT_PARAMETER_MAX_LENGTH+1];
 
@@ -96,31 +102,27 @@ void UserTable::updateEEPROM( Username username,Password password, Role role, in
 
     //address eeprom memory to put the username
     uint16_t base_address = EEPROM_TABLE_LENGTH_ADDRESS + EEPROM_TABLE_LENGTH_LENGTH + index*EEPROM_USER_LENGTH;
-
-    while (!eeprom_is_ready())
-        ;
     AuxiliarModule::stringToCharArray(username,aux);
-    //set of address for username
-    forn(i,username.length()+1)
-    usernameAddresses[i] = base_address + i;
-    eeprom_write_block(aux, usernameAddresses, username.length()+1);
-
-
 
     while (!eeprom_is_ready())
         ;
+    eeprom_write_block(aux, (void *)base_address, username.length());
+    //write null char
+    eeprom_write_byte((uint8_t*)base_address+username.length(),0);
+
     base_address += INPUT_PARAMETER_MAX_LENGTH + 1;
+
+    while (!eeprom_is_ready())
+        ;
     AuxiliarModule::stringToCharArray(password,aux);
-    //set of address for password
-    forn(i,password.length()+1)
-    passwordAddresses[i] = base_address + i;
-    eeprom_write_block(aux, passwordAddresses, password.length()+1);
+    eeprom_write_block(aux, (void *)base_address, password.length());
+    //write null char
+    eeprom_write_byte((uint8_t*)base_address+password.length(),0);
 
 
     base_address+= INPUT_PARAMETER_MAX_LENGTH + 1;
-    //
-    while (!eeprom_is_ready())
-        ;
+
+
     eeprom_write_byte((uint8_t*)base_address,role);
 
 }
@@ -131,14 +133,11 @@ void UserTable::readEEPROM() {
         ;
     length = eeprom_read_word(EEPROM_TABLE_LENGTH_ADDRESS);
 
-    if (length == 0)
-        ;
+//TODO: Write 0 in EEPROM_TABLE_LENGTH_ADDRESS EEPROM address
 
     char username[INPUT_PARAMETER_MAX_LENGTH + 1];
     char password[INPUT_PARAMETER_MAX_LENGTH + 1];
-    int role;
-
-    int address[INPUT_PARAMETER_MAX_LENGTH + 1];
+    uint8_t role;
 
     uint16_t baseaddress = EEPROM_TABLE_LENGTH_ADDRESS + EEPROM_TABLE_LENGTH_LENGTH;
 
@@ -148,30 +147,27 @@ void UserTable::readEEPROM() {
 
         while (!eeprom_is_ready())
             ;
-        //get username address
-        forn(j,INPUT_PARAMETER_MAX_LENGTH + 1)
-        address[j] = baseaddress + j;
-        eeprom_read_block(username,address,INPUT_PARAMETER_MAX_LENGTH + 1);
+        eeprom_read_block(username,(void*)baseaddress,INPUT_PARAMETER_MAX_LENGTH + 1);
 
-
-        while(!eeprom_is_ready())
-            ;
         //update baseaddress to read the password
         baseaddress+= INPUT_PARAMETER_MAX_LENGTH + 1;
-        forn(j,INPUT_PARAMETER_MAX_LENGTH + 1)
-        address[j] = baseaddress + j;
-        eeprom_read_block(password,address,INPUT_PARAMETER_MAX_LENGTH + 1);
+        while(!eeprom_is_ready())
+            ;
+        eeprom_read_block(password,(void*)baseaddress,INPUT_PARAMETER_MAX_LENGTH + 1);
+
+        //update baseaddress to read the role
+        baseaddress+=INPUT_PARAMETER_MAX_LENGTH + 1;
 
         //Read the user role
         while (!eeprom_is_ready())
             ;
-        //update baseaddress to read the role
-        baseaddress+=INPUT_PARAMETER_MAX_LENGTH + 1;
         role = eeprom_read_byte((uint8_t*)baseaddress);
 
 
         //add the user
-        addEntry(username,password,role);
+        entries[i].username = String(username);
+        entries[i].password = String(password);
+        entries[i].role = role;
 
         //update base address
         baseaddress+=1;
