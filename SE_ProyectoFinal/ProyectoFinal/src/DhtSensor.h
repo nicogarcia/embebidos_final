@@ -15,4 +15,4 @@ private:
     static Temperature temperature;
 };
 
-#endif /* DHT_SENSOR */
+#endif // DHT_SENSOR

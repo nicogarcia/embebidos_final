@@ -12,4 +12,4 @@ private:
     static LightIntensity light_intensity_sum;
 };
 
-#endif /* LIGHT_SENSOR */
+#endif // LIGHT_SENSOR

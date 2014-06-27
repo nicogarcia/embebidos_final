@@ -19,7 +19,7 @@ void LightSensor::initialize() {
 
 void LightSensor::measure() {
     // Measures the light intensity
-    LightIntensity light_intensity = analogRead(PIN_LIGHT_SENSOR);
+    LightIntensity light_intensity = analogRead(ANALOG_PIN_LIGHT_SENSOR);
 
     if (LightIntensityQueue::isFull()) {
         // The queue is full

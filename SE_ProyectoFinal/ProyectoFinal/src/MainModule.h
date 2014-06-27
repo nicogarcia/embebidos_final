@@ -18,4 +18,4 @@ private:
     static void ttlExpirationEvent();
 };
 
-#endif /* MAIN_MODULE */
+#endif // MAIN_MODULE

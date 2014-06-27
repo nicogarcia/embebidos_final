@@ -16,28 +16,28 @@ void MainModule::checkEvent() {
     // Get's the current time
     Time current_time = millis();
 
-    if(event_times[current_event] > current_time)
+    if (event_times[current_event] > current_time)
         // The timer overflowed
         event_times[current_event] = 0;
 
-    if(current_time - event_times[current_event] > EVENT_CHECK_PERIODS[current_event]) {
+    if (current_time - event_times[current_event] > EVENT_CHECK_PERIODS[current_event]) {
         // It's time to check the current event
 
         switch(current_event) {
         case DHT_MEASUREMENT : {
-                dhtMeasurementEvent();
-                break;
-            }
+            dhtMeasurementEvent();
+            break;
+        }
 
         case LIGHT_INTENSITY_MEASUREMENT : {
-                lightIntensityMeasurementEvent();
-                break;
-            }
+            lightIntensityMeasurementEvent();
+            break;
+        }
 
         case TTL_EXPIRATION : {
-                ttlExpirationEvent();
-                break;
-            }
+            ttlExpirationEvent();
+            break;
+        }
         }
 
         // Sets the current time as the current event time
@@ -55,22 +55,45 @@ void MainModule::initialize() {
     UserModule::initialize();
 
     // Initializes the event times
-    forn(i, EVENT_COUNT)
-    event_times[i] = 0;
+    forn (i, EVENT_COUNT) {
+        event_times[i] = 0;
+    }
 
-    InputParameter inputs[INPUT_MAX_COUNT];
+
+    // TODO: debug code
+    Input inputs[INPUT_MAX_COUNT];
+
+    strcpy(inputs[0] , "2"); // LOGIN
+    strcpy(inputs[1] , ADMIN_DEFAULT_USERNAME);
+    strcpy(inputs[2] , ADMIN_DEFAULT_PASSWORD);
+    RequestModule::serveRequest(inputs);
+
     /*
-        strcpy(inputs[0] , "2"); // LOGIN
-        strcpy(inputs[1] , ADMIN_DEFAULT_USERNAME);
-        strcpy(inputs[2] , ADMIN_DEFAULT_PASSWORD);
-        RequestModule::serveRequest(inputs);
-
         strcpy(inputs[0] , "0"); // ADD_USER
         strcpy(inputs[1] , ADMIN_DEFAULT_USERNAME);
         strcpy(inputs[2] , "lala");
         strcpy(inputs[3] , "lala");
         RequestModule::serveRequest(inputs);
-    */
+    	*/
+
+    strcpy(inputs[0] , "7"); // REQUEST_USERS
+    strcpy(inputs[1] , ADMIN_DEFAULT_USERNAME);
+    RequestModule::serveRequest(inputs);
+
+    /*
+        strcpy(inputs[0] , "2"); // LOGIN
+        strcpy(inputs[1] , ADMIN_DEFAULT_USERNAME);
+        strcpy(inputs[2] , ADMIN_DEFAULT_PASSWORD);
+        RequestModule::serveRequest(inputs);
+    	*/
+
+    /*
+        strcpy(inputs[0] , "0"); // ADD_USER
+        strcpy(inputs[1] , ADMIN_DEFAULT_USERNAME);
+        strcpy(inputs[2] , "lala");
+        strcpy(inputs[3] , "lala");
+        RequestModule::serveRequest(inputs);
+    	*/
 }
 
 void MainModule::dhtMeasurementEvent() {
@@ -82,13 +105,13 @@ void MainModule::lightIntensityMeasurementEvent() {
     // Measures the light intensity
     StateModule::measureLightIntensity();
 
-    if(! StateModule::isLightDisabled()) {
+    if (! StateModule::isLightDisabled()) {
         // Light is enabled
 
         // Gets the light intensity
         LightIntensity light_intensity = StateModule::getLightIntensityAverage();
 
-        if(light_intensity < LIGHT_INTENSITY_AVERAGE_THRESHOLD)
+        if (light_intensity < LIGHT_INTENSITY_AVERAGE_THRESHOLD)
             // The environment is too dark
             StateModule::turnOnLight();
         else

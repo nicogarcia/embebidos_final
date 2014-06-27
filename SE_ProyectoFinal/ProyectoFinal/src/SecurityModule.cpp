@@ -1,15 +1,15 @@
 #include "SecurityModule.h"
 
-bool SecurityModule::authorizeRequest(Request request, InputParameter input_parameters[INPUT_PARAMETER_MAX_COUNT]) {
+bool SecurityModule::authorizeRequest(Request request, Input input_parameters[INPUT_PARAMETER_MAX_COUNT]) {
     // Finds out if the user is logged in
-    bool is_user_logged_in = UserModule::isUserLoggedIn(input_parameters[1]);
+    bool is_user_logged_in = UserModule::isUserLoggedIn(input_parameters[0]);
 
-    if(request == LOGIN)
+    if (request == LOGIN)
         // It is a login request
         // The request is authorized only if the user is not already logged in
         return ! is_user_logged_in;
 
-    if(! is_user_logged_in)
+    if (! is_user_logged_in)
         // The user is not logged in
         return false;
 
@@ -23,14 +23,14 @@ bool SecurityModule::authorizeRequest(Request request, InputParameter input_para
         return true; // It is a non-administrator request
     }
 
-    if(UserModule::getUserRole(input_parameters[1]) != ADMIN)
+    if (UserModule::getUserRole(input_parameters[0]) != ADMIN)
         // The user is not an administrator
         return false;
 
-    if(request == REMOVE_USER)
+    if (request == REMOVE_USER)
         // It is a remove user request
         // The request is authorized only if the user to be removed is not an administrator
-        return UserModule::getUserRole(input_parameters[2]) != ADMIN;
+        return UserModule::getUserRole(input_parameters[1]) != ADMIN;
 
     switch(request) {
     case ADD_USER :

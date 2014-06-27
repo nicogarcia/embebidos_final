@@ -9,7 +9,7 @@ public:
     static LoginTableEntry *getEntries();
     static LoginTableEntry *getEntry(Username username);
     static int getEntryIndex(Username username);
-    static int getLength();
+    static uint8_t getLength();
     static void initialize();
     static bool isEmpty();
     static bool isFull();
@@ -20,4 +20,4 @@ private:
     static uint8_t length;
 };
 
-#endif /* LOGIN_TABLE */
+#endif // LOGIN_TABLE

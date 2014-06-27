@@ -6,12 +6,12 @@ void Lock::close() {
     is_closed = true;
 
     // Closes the lock
-    digitalWrite(PIN_LOCK, HIGH);
+    digitalWrite(DIGITAL_PIN_LOCK, HIGH);
 }
 
 void Lock::initialize() {
     // Sets the lock pin as an output
-    pinMode(PIN_LOCK, OUTPUT);
+    pinMode(DIGITAL_PIN_LOCK, OUTPUT);
 }
 
 bool Lock::isClosed() {
@@ -22,5 +22,5 @@ void Lock::open() {
     is_closed = false;
 
     // Opens the lock
-    digitalWrite(PIN_LOCK, LOW);
+    digitalWrite(DIGITAL_PIN_LOCK, LOW);
 }

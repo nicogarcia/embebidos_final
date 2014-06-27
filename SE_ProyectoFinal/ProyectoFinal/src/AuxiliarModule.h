@@ -5,13 +5,13 @@
 
 class AuxiliarModule {
 public:
-    static bool isValidPassword(char* password);
-    static bool isValidRequest(char* request);
-    static bool isValidUsername(char* username);
-    static void stringToCharArray(String string, char *array);
+    static bool isValidPassword(Input password);
+    static bool isValidRequest(Input request);
+    static bool isValidUsername(Input username);
+    static void stringToCharArray(String string, char char_array[]);
 private:
-    static bool isValidInputParameter(char* input_parameter);
+    static bool isValidInputParameter(Input input_parameter);
     static bool isValidInputParameterCharacter(char character);
 };
 
-#endif /* AUXILIAR_MODULE */
+#endif // AUXILIAR_MODULE

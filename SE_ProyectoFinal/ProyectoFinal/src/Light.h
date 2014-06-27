@@ -17,4 +17,4 @@ private:
     static bool is_off;
 };
 
-#endif /* LIGHT */
+#endif // LIGHT

@@ -13,4 +13,4 @@ private:
     static bool is_closed;
 };
 
-#endif /* LOCK */
+#endif // LOCK

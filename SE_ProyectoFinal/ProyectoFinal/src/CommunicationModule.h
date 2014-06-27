@@ -16,11 +16,10 @@ private:
     static SoftwareSerial bluetoothInterface;
     static bool ignore_message;
     static char message_buffer[INPUT_MESSAGE_MAX_LENGTH];
-    static InputParameter inputs[INPUT_MAX_COUNT];
-    static int message_index;
+    static int message_buffer_index;
+    static void processCharacter(char character);
     static void processMessage();
-    static void readCharacter();
     static void sendMessage(String message);
 };
 
-#endif /* COMMUNICATION_MODULE */
+#endif // COMMUNICATION_MODULE

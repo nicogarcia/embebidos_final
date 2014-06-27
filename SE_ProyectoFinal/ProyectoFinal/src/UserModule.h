@@ -5,13 +5,13 @@
 
 class UserModule {
 public:
-    static void addUser(const Username username, const Password password, Role role);
+    static void addUser(Username username, Password password, Role role);
     static bool authenticateUser(Username username, Password password);
     static void autoLogoutUsers();
     static void changeUserPassword(Username username, Password password);
     static void decrementUserTtls();
     static Role getUserRole(Username username);
-    static int getUserUsernames(Username usernames[CAPACITY_USER_TABLE]);
+    static uint8_t getUserUsernames(Username usernames[CAPACITY_USER_TABLE]);
     static void initialize();
     static bool isLoginTableFull();
     static bool isUserLoggedIn(Username username);
@@ -23,4 +23,4 @@ public:
     static bool userExists(Username username);
 };
 
-#endif /* USER_MODULE */
+#endif // USER_MODULE

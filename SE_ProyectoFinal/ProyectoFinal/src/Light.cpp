@@ -16,7 +16,7 @@ void Light::enable() {
 
 void Light::initialize() {
     // Sets the light pin as an output
-    pinMode(PIN_LIGHT, OUTPUT);
+    pinMode(DIGITAL_PIN_LIGHT, OUTPUT);
 }
 
 bool Light::isDisabled() {
@@ -31,12 +31,12 @@ void Light::turnOff() {
     is_off = true;
 
     // Turns the light off
-    digitalWrite(PIN_LIGHT, HIGH);
+    digitalWrite(DIGITAL_PIN_LIGHT, HIGH);
 }
 
 void Light::turnOn() {
     is_off = false;
 
     // Turns the light on
-    digitalWrite(PIN_LIGHT, LOW);
+    digitalWrite(DIGITAL_PIN_LIGHT, LOW);
 }

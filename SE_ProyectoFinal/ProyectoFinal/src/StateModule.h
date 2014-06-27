@@ -24,4 +24,4 @@ public:
     static void turnOnLight();
 };
 
-#endif /* STATE_MODULE */
+#endif // STATE_MODULE

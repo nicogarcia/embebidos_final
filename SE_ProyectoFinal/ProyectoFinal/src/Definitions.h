@@ -2,14 +2,27 @@
 #define DEFINITIONS
 
 #define DEBUG_MODE
-//#define FIRST_USE_MODE
+//#define EEPROM_INITIALIZATION_MODE
 
 #include <Arduino.h>
 #include "SoftwareSerial.h"
+#include <avr/eeprom.h>
 #include "../lib/dht.h" // TODO: can be added to search path? (relative path)
 
 #define forn(i, n) for (int i = 0; i < (int) (n); ++i)
 #define forsn(i, s, n) for (int i = (int) (s); i < (int) (n); ++i)
+
+static const int REQUEST_MIN_LENGTH = 1;
+static const int REQUEST_MAX_LENGTH = 2;
+
+static const int INPUT_PARAMETER_MAX_COUNT = 3;
+static const int INPUT_PARAMETER_MIN_LENGTH = 3;
+static const int INPUT_PARAMETER_MAX_LENGTH = 16;
+
+static const int INPUT_MAX_COUNT = 4;
+static const int INPUT_MAX_LENGTH = max(REQUEST_MAX_LENGTH, INPUT_PARAMETER_MAX_LENGTH);
+
+static const int INPUT_MESSAGE_MAX_LENGTH = REQUEST_MAX_LENGTH + INPUT_PARAMETER_MAX_COUNT * INPUT_PARAMETER_MAX_LENGTH + INPUT_PARAMETER_MAX_COUNT;
 
 typedef uint8_t Event;
 typedef uint8_t OutputParameter;
@@ -24,25 +37,8 @@ typedef int Ttl;
 
 typedef unsigned long int Time;
 
-//TODO
-static const int INPUT_MAX_COUNT = 4;
-
-static const int REQUEST_MIN_LENGTH = 1;
-static const int REQUEST_MAX_LENGTH = 2;
-
-static const int INPUT_PARAMETER_MAX_COUNT = 3;
-static const int INPUT_PARAMETER_MIN_LENGTH = 3;
-static const int INPUT_PARAMETER_MAX_LENGTH = 16;
-
-//EEPROM constants
-static const uint16_t EEPROM_USER_LENGTH = 35;
-static const uint16_t EEPROM_TABLE_LENGTH_ADDRESS = 0;
-static const uint16_t EEPROM_TABLE_LENGTH_LENGTH = 1;
-
-static const int INPUT_MESSAGE_MAX_LENGTH = REQUEST_MAX_LENGTH + INPUT_PARAMETER_MAX_COUNT * INPUT_PARAMETER_MAX_LENGTH + INPUT_PARAMETER_MAX_COUNT;
-
-typedef char Input[INPUT_MESSAGE_MAX_LENGTH];
-typedef char InputParameter[INPUT_PARAMETER_MAX_LENGTH];
+typedef char InputParameter[INPUT_PARAMETER_MAX_LENGTH + 1];
+typedef char Input[INPUT_MAX_LENGTH + 1];
 
 typedef InputParameter Password;
 typedef InputParameter Username;
@@ -106,27 +102,32 @@ enum Roles {
     USER
 };
 
-static const uint8_t PIN_DHT_SENSOR = 2;
-static const uint8_t PIN_LIGHT = 13;
-static const uint8_t PIN_LIGHT_SENSOR = 3;
-static const uint8_t PIN_LOCK = 12;
-static const uint8_t PIN_SOFTWARE_SERIAL_RECEPTION = 7;
-static const uint8_t PIN_SOFTWARE_SERIAL_TRANSMISSION = 6;
+static const uint8_t ANALOG_PIN_LIGHT_SENSOR = 3;
+static const uint8_t DIGITAL_PIN_DHT_SENSOR = 2;
+static const uint8_t DIGITAL_PIN_LIGHT = 13;
+static const uint8_t DIGITAL_PIN_LOCK = 12;
+static const uint8_t DIGITAL_PIN_SOFTWARE_SERIAL_RECEPTION = 7;
+static const uint8_t DIGITAL_PIN_SOFTWARE_SERIAL_TRANSMISSION = 6;
+
+static const long int BAUD_RATE_BLUETOOTH_INTERFACE = 9600;
+static const long int BAUD_RATE_MONITOR_INTERFACE = 9600;
 
 static const char MESSAGE_BEGIN = '$';
 static const char MESSAGE_INPUTS_SEPARATOR = '#';
 static const char MESSAGE_END = '*';
 
-static const long int BAUD_RATE_BLUETOOTH = 9600;
-static const long int BAUD_RATE_TERMINAL = 9600;
-
 static const int CAPACITY_USER_TABLE = 16; // Maximum number of users in the system
 static const int CAPACITY_LOGIN_TABLE = 16; // Maximum number of logged in users
 
+static const uint16_t USER_TABLE_EEPROM_LENGTH_ADDRESS = 0;
+static const uint16_t USER_TABLE_EEPROM_LENGTH_SIZE = sizeof(uint8_t);
+static const uint16_t USER_TABLE_EEPROM_ENTRIES_ADDRESS = USER_TABLE_EEPROM_LENGTH_ADDRESS + USER_TABLE_EEPROM_LENGTH_SIZE;
+static const uint16_t USER_TABLE_EEPROM_ENTRY_SIZE = sizeof(UserTableEntry);
+
 static const Ttl INITIAL_TTL = 40;
 
-static const Username ADMIN_DEFAULT_USERNAME = "admin";
-static const Password ADMIN_DEFAULT_PASSWORD = "12345";
+static Username ADMIN_DEFAULT_USERNAME = "admin";
+static Password ADMIN_DEFAULT_PASSWORD = "12345";
 
 static const Humidity HUMIDITY_UNKNOWN = -1;
 static const Temperature TEMPERATURE_UNKNOWN = 0;
@@ -157,5 +158,6 @@ static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
 #include "StateModule.h"
 #include "UserModule.h"
 #include "UserTable.h"
+#include "UserTableEeprom.h"
 
-#endif /* DEFINITIONS */
+#endif // DEFINITIONS

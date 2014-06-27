@@ -19,7 +19,7 @@ void DhtSensor::initialize() {
 
 void DhtSensor::measure() {
     // Measures the humidity and temperature
-    int result = sensor.read11(PIN_DHT_SENSOR);
+    int result = sensor.read11(DIGITAL_PIN_DHT_SENSOR);
 
     if (result == DHTLIB_OK) {
         // The measurement is correct

@@ -5,7 +5,7 @@
 
 class RequestModule {
 public:
-    static void serveRequest(InputParameter inputs[INPUT_MAX_COUNT]);
+    static void serveRequest(Input inputs[INPUT_MAX_COUNT]);
 private:
     static void addUser(Username username, Password password);
     static void changePassword(Username username, Password password);
@@ -15,9 +15,9 @@ private:
     static void removeUser(Username username);
     static void requestState();
     static void requestUsers();
-    static void serveRequestSafely(Request request, InputParameter input_parameters[INPUT_PARAMETER_MAX_COUNT]);
+    static void serveRequestSafely(Request request, Input input_parameters[INPUT_PARAMETER_MAX_COUNT]);
     static void toggleLight();
     static void toggleLock();
 };
 
-#endif /* REQUEST_MODULE */
+#endif // REQUEST_MODULE

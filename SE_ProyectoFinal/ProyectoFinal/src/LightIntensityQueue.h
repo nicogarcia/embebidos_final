@@ -19,4 +19,4 @@ private:
     static int tail;
 };
 
-#endif /* LIGHT_INTENSITY_QUEUE */
+#endif // LIGHT_INTENSITY_QUEUE
