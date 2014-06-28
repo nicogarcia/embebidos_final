@@ -5,6 +5,9 @@
 
 class CommunicationModule {
 public:
+#ifdef DEBUG_MODE
+    static void debug();
+#endif // DEBUG_MODE
     static void initialize();
     static void readRequest();
     static void sendErrorResponse(OutputParameter error_parameter);

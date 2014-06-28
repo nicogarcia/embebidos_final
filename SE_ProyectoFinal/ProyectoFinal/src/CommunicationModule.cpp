@@ -5,6 +5,57 @@ bool CommunicationModule::ignore_message;
 char CommunicationModule::message_buffer[INPUT_MESSAGE_MAX_LENGTH];
 int CommunicationModule::message_buffer_index;
 
+#ifdef DEBUG_MODE
+void CommunicationModule::debug() {
+    // Fills the message buffer one character at a time
+    // This is the closest way to the reality that the system can be tested
+    // Remember to define EEPROM_INITIALIZATION_MODE to avoid strange behaviours
+
+    // Example 1
+    //
+    // $LOGIN#admin#12345*
+    // $CHANGE_PASSWORD#admin#admin*
+    // $LOGOUT#admin*
+    // $LOGIN#admin#admin*
+    //
+    // Expected responses:
+    // $1#7*
+    // $1*
+    // $1*
+    // $1#7*
+    //char message[] = "$2#admin#12345*$1#admin#admin*$3#admin*$2#admin#admin*";
+
+    // Example 2
+    //
+    // $LOGIN#admin#12345*
+    // $ADD_USER#admin#usuario#us*
+    // $ADD_USER#admin#usuario#usuario*
+    // $ADD_USER#admin#usuario#usuario2*
+    // $LOGOUT#admin*
+    // $LOGIN#usuario#usuario*
+    // $REQUEST_USERS#usuario*
+    // $REQUEST_USERS#admin*
+    // $TOGGLE_LOCK#usuario*
+    //
+    // Expected responses:
+    // $1#7*
+    // $0#0*
+    // $1*
+    // $0#11*
+    // $1*
+    // $1#7*
+    // $0#10*
+    // $0#10*
+    // $1*
+    char message[] = "$2#admin#12345*$0#admin#usuario#us*$0#admin#usuario#usuario*$0#admin#usuario#usuario2*$3#admin*$2#usuario#usuario*$7#usuario*$7#admin*$9#usuario*";
+
+    int length = strlen(message);
+    forn (i, length) {
+        processCharacter(message[i]);
+    }
+}
+#endif // DEBUG_MODE
+
 void CommunicationModule::initialize() {
     ignore_message = true;
     message_buffer_index = 0;
@@ -15,7 +66,13 @@ void CommunicationModule::initialize() {
 #ifdef DEBUG_MODE
     // Initializes the monitor interface
     Serial.begin(BAUD_RATE_MONITOR_INTERFACE);
+
+    // Clears the input serial buffer
+    while (Serial.available() > 0)
+        Serial.read();
+
     Serial.println("Hello from SISAD");
+    Serial.flush();
 #endif // DEBUG_MODE
 }
 
@@ -131,6 +188,7 @@ void CommunicationModule::processCharacter(char character) {
     case MESSAGE_END : {
 #ifdef DEBUG_MODE
         Serial.println(character);
+        Serial.flush();
 #endif // DEBUG_MODE
 
         if (! ignore_message) {
@@ -218,6 +276,7 @@ void CommunicationModule::sendMessage(String message) {
 #ifdef DEBUG_MODE
     Serial.print("T: ");
     Serial.println(message);
+    Serial.flush();
 #endif // DEBUG_MODE
 
     // Parses from string to char array

@@ -2,7 +2,7 @@
 #define DEFINITIONS
 
 #define DEBUG_MODE
-//#define EEPROM_INITIALIZATION_MODE
+#define EEPROM_INITIALIZATION_MODE
 
 #include <Arduino.h>
 #include "SoftwareSerial.h"
