@@ -32,17 +32,6 @@ bool AuxiliarModule::isValidUsername(Input username) {
     return isValidInputParameter(username);
 }
 
-void AuxiliarModule::stringToCharArray(String string, char char_array[]) {
-    int length = string.length();
-
-    forn (i, length) {
-        char_array[i] = string.charAt(i);
-    }
-
-    // Appends a null character
-    char_array[length] = '\0';
-}
-
 bool AuxiliarModule::isValidInputParameter(Input input_parameter) {
     // Gets the input parameter length
     int length = strlen(input_parameter);
