@@ -28,14 +28,14 @@ void CommunicationModule::debug() {
     // Example 2
     //
     // $LOGIN#admin#12345*
-    // $ADD_USER#admin#usuario#us*
-    // $ADD_USER#admin#usuario#usuario*
-    // $ADD_USER#admin#usuario#usuario2*
+    // $ADD_USER#admin#user#us*
+    // $ADD_USER#admin#user#user*
+    // $ADD_USER#admin#user#user2*
     // $LOGOUT#admin*
-    // $LOGIN#usuario#usuario*
-    // $REQUEST_USERS#usuario*
+    // $LOGIN#user#user*
+    // $REQUEST_USERS#user*
     // $REQUEST_USERS#admin*
-    // $TOGGLE_LOCK#usuario*
+    // $TOGGLE_LOCK#user*
     //
     // Expected responses:
     // $1#7*
@@ -47,12 +47,57 @@ void CommunicationModule::debug() {
     // $0#10*
     // $0#10*
     // $1*
-    char message[] = "$2#admin#12345*$0#admin#usuario#us*$0#admin#usuario#usuario*$0#admin#usuario#usuario2*$3#admin*$2#usuario#usuario*$7#usuario*$7#admin*$9#usuario*";
+    //char message[] = "$2#admin#12345*$0#admin#user#us*$0#admin#user#user*$0#admin#user#user2*$3#admin*$2#user#user*$7#user*$7#admin*$9#user*";
 
-    int length = strlen(message);
-    forn (i, length) {
-        processCharacter(message[i]);
-    }
+    // Example 3
+    //
+    // $LOGIN#admin#12345*
+    // $REFRESH_TTL#user*
+    // $REFRESH_TTL#admin*
+    // $TOGGLE_LIGHT#admin*
+    // $TOGGLE_LOCK#admin*
+    // $REQUEST_STATE#admin*
+    //
+    // Expected responses:
+    // $1#7*
+    // $0#10*
+    // $1*
+    // $1*
+    // $1*
+    // $1#6#3#2#<temperature>#<humidity>*
+    //char message[] = "$2#admin#12345*$4#user*$4#admin*$8#admin*$9#admin*$6#admin*";
+
+    // REQUEST_USERS not working properly
+    // Example 4
+    //
+    // $LOGIN#admin#12345*
+    // $ADD_USER#admin#user0#pwd*
+    // $ADD_USER#admin#user1#pwd*
+    // $ADD_USER#admin#user2#pwd*
+    // $REMOVE_USER#admin#user1*
+    // $REMOVE_USER#admin#user1*
+    // $ADD_USER#admin#user2#pwd*
+    // $ADD_USER#admin#user1#pwd*
+    // $REQUEST_USERS#admin*
+    //
+    // Expected responses:
+    // $1#7*
+    // $1*
+    // $1*
+    // $1*
+    // $1*
+    // $0#12*
+    // $0#11*
+    // $1*
+    // $1#3#user0#user2#user1*
+    //char message[] = "$2#admin#12345*$0#admin#user0#pwd*$0#admin#user1#pwd*$0#admin#user2#pwd*$5#admin#user1*$5#admin#user1*$0#admin#user2#pwd*$0#admin#user1#pwd*$7#admin*";
+
+    /*
+        int length = strlen(message);
+        forn (i, length) {
+            processCharacter(message[i]);
+        }
+    	*/
 }
 #endif // DEBUG_MODE
 
@@ -86,90 +131,130 @@ void CommunicationModule::sendErrorResponse(OutputParameter error_parameter) {
     // Response
     Response response = ERROR;
 
-    // Builds the message
-    String message = "";
-    message += MESSAGE_BEGIN;
-    message += response;
-    message += MESSAGE_INPUTS_SEPARATOR;
-    message += error_parameter;
-    message += MESSAGE_END;
-
     // Sends the message
-    sendMessage(message);
+    bluetoothInterface.print(MESSAGE_BEGIN);
+    bluetoothInterface.print(response);
+    bluetoothInterface.print(MESSAGE_INPUTS_SEPARATOR);
+    bluetoothInterface.print(error_parameter);
+    bluetoothInterface.print(MESSAGE_END);
+
+#ifdef DEBUG_MODE
+    Serial.print("T: ");
+    Serial.print(MESSAGE_BEGIN);
+    Serial.print(response);
+    Serial.print(MESSAGE_INPUTS_SEPARATOR);
+    Serial.print(error_parameter);
+    Serial.println(MESSAGE_END);
+    Serial.flush();
+#endif // DEBUG_MODE
 }
 
 void CommunicationModule::sendLoginResponse(OutputParameter logged_in_parameter) {
     // Response
     Response response = SUCCESS;
 
-    // Builds the message
-    String message = "";
-    message += MESSAGE_BEGIN;
-    message += response;
-    message += MESSAGE_INPUTS_SEPARATOR;
-    message += logged_in_parameter;
-    message += MESSAGE_END;
-
     // Sends the message
-    sendMessage(message);
+    bluetoothInterface.print(MESSAGE_BEGIN);
+    bluetoothInterface.print(response);
+    bluetoothInterface.print(MESSAGE_INPUTS_SEPARATOR);
+    bluetoothInterface.print(logged_in_parameter);
+    bluetoothInterface.print(MESSAGE_END);
+
+#ifdef DEBUG_MODE
+    Serial.print("T: ");
+    Serial.print(MESSAGE_BEGIN);
+    Serial.print(response);
+    Serial.print(MESSAGE_INPUTS_SEPARATOR);
+    Serial.print(logged_in_parameter);
+    Serial.println(MESSAGE_END);
+    Serial.flush();
+#endif // DEBUG_MODE
 }
 
 void CommunicationModule::sendRequestStateResponse(OutputParameter lock_closed_parameter, OutputParameter light_off_parameter, OutputParameter light_disabled_parameter, Temperature temperature, Humidity humidity) {
     // Response
     Response response = SUCCESS;
 
-    // Builds the message
-    String message = "";
-    message += MESSAGE_BEGIN;
-    message += response;
-    message += MESSAGE_INPUTS_SEPARATOR;
-    message += lock_closed_parameter;
-    message += MESSAGE_INPUTS_SEPARATOR;
-    message += light_off_parameter;
-    message += MESSAGE_INPUTS_SEPARATOR;
-    message += light_disabled_parameter;
-    message += MESSAGE_INPUTS_SEPARATOR;
-    message += temperature;
-    message += MESSAGE_INPUTS_SEPARATOR;
-    message += humidity;
-    message += MESSAGE_END;
-
     // Sends the message
-    sendMessage(message);
+    bluetoothInterface.print(MESSAGE_BEGIN);
+    bluetoothInterface.print(response);
+    bluetoothInterface.print(MESSAGE_INPUTS_SEPARATOR);
+    bluetoothInterface.print(lock_closed_parameter);
+    bluetoothInterface.print(MESSAGE_INPUTS_SEPARATOR);
+    bluetoothInterface.print(light_off_parameter);
+    bluetoothInterface.print(MESSAGE_INPUTS_SEPARATOR);
+    bluetoothInterface.print(light_disabled_parameter);
+    bluetoothInterface.print(MESSAGE_INPUTS_SEPARATOR);
+    bluetoothInterface.print(temperature);
+    bluetoothInterface.print(MESSAGE_INPUTS_SEPARATOR);
+    bluetoothInterface.print(humidity);
+    bluetoothInterface.print(MESSAGE_END);
+
+#ifdef DEBUG_MODE
+    Serial.print("T: ");
+    Serial.print(MESSAGE_BEGIN);
+    Serial.print(response);
+    Serial.print(MESSAGE_INPUTS_SEPARATOR);
+    Serial.print(lock_closed_parameter);
+    Serial.print(MESSAGE_INPUTS_SEPARATOR);
+    Serial.print(light_off_parameter);
+    Serial.print(MESSAGE_INPUTS_SEPARATOR);
+    Serial.print(light_disabled_parameter);
+    Serial.print(MESSAGE_INPUTS_SEPARATOR);
+    Serial.print(temperature);
+    Serial.print(MESSAGE_INPUTS_SEPARATOR);
+    Serial.print(humidity);
+    Serial.println(MESSAGE_END);
+    Serial.flush();
+#endif // DEBUG_MODE
 }
 
 void CommunicationModule::sendRequestUsersResponse(int user_count, Username usernames[CAPACITY_USER_TABLE]) {
     // Response
     Response response = SUCCESS;
 
-    // Builds the message
-    String message = "";
-    message += MESSAGE_BEGIN;
-    message += response;
-    message += MESSAGE_INPUTS_SEPARATOR;
-    message += user_count;
-    forn (i, user_count) {
-        message += MESSAGE_INPUTS_SEPARATOR;
-        message += usernames[i];
-    }
-    message += MESSAGE_END;
-
     // Sends the message
-    sendMessage(message);
+    bluetoothInterface.print(MESSAGE_BEGIN);
+    bluetoothInterface.print(response);
+    bluetoothInterface.print(MESSAGE_INPUTS_SEPARATOR);
+    bluetoothInterface.print(user_count);
+    forn (i, user_count) {
+        bluetoothInterface.print(MESSAGE_INPUTS_SEPARATOR);
+        bluetoothInterface.print(usernames[i]);
+    }
+    bluetoothInterface.print(MESSAGE_END);
+
+#ifdef DEBUG_MODE
+    Serial.print("T: ");
+    Serial.print(MESSAGE_BEGIN);
+    Serial.print(response);
+    Serial.print(MESSAGE_INPUTS_SEPARATOR);
+    Serial.print(user_count);
+    forn (i, user_count) {
+        Serial.print(MESSAGE_INPUTS_SEPARATOR);
+        Serial.print(usernames[i]);
+    }
+    Serial.println(MESSAGE_END);
+    Serial.flush();
+#endif // DEBUG_MODE
 }
 
 void CommunicationModule::sendSuccessResponse() {
     // Response
     Response response = SUCCESS;
 
-    // Builds the message
-    String message = "";
-    message += MESSAGE_BEGIN;
-    message += response;
-    message += MESSAGE_END;
-
     // Sends the message
-    sendMessage(message);
+    bluetoothInterface.print(MESSAGE_BEGIN);
+    bluetoothInterface.print(response);
+    bluetoothInterface.print(MESSAGE_END);
+
+#ifdef DEBUG_MODE
+    Serial.print("T: ");
+    Serial.print(MESSAGE_BEGIN);
+    Serial.print(response);
+    Serial.println(MESSAGE_END);
+    Serial.flush();
+#endif // DEBUG_MODE
 }
 
 void CommunicationModule::processCharacter(char character) {
@@ -270,19 +355,4 @@ void CommunicationModule::processMessage() {
 
     // Serves the request
     RequestModule::serveRequest(inputs);
-}
-
-void CommunicationModule::sendMessage(String message) {
-#ifdef DEBUG_MODE
-    Serial.print("T: ");
-    Serial.println(message);
-    Serial.flush();
-#endif // DEBUG_MODE
-
-    // Parses from string to char array
-    char message_array[message.length() + 1];
-    AuxiliarModule::stringToCharArray(message, message_array);
-
-    // Sends the message bytes
-    bluetoothInterface.print(message_array);
 }

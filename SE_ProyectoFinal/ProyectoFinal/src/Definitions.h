@@ -7,7 +7,7 @@
 #include <Arduino.h>
 #include "SoftwareSerial.h"
 #include <avr/eeprom.h>
-#include "../lib/dht.h" // TODO: can be added to search path? (relative path)
+#include "../lib/dht.h"
 
 #define forn(i, n) for (int i = 0; i < (int) (n); ++i)
 #define forsn(i, s, n) for (int i = (int) (s); i < (int) (n); ++i)
@@ -116,15 +116,15 @@ static const char MESSAGE_BEGIN = '$';
 static const char MESSAGE_INPUTS_SEPARATOR = '#';
 static const char MESSAGE_END = '*';
 
-static const int CAPACITY_USER_TABLE = 16; // Maximum number of users in the system
-static const int CAPACITY_LOGIN_TABLE = 16; // Maximum number of logged in users
+static const int CAPACITY_USER_TABLE = 8; // Maximum number of users in the system
+static const int CAPACITY_LOGIN_TABLE = 8; // Maximum number of logged in users
 
 static const uint16_t USER_TABLE_EEPROM_LENGTH_ADDRESS = 0;
 static const uint16_t USER_TABLE_EEPROM_LENGTH_SIZE = sizeof(uint8_t);
 static const uint16_t USER_TABLE_EEPROM_ENTRIES_ADDRESS = USER_TABLE_EEPROM_LENGTH_ADDRESS + USER_TABLE_EEPROM_LENGTH_SIZE;
 static const uint16_t USER_TABLE_EEPROM_ENTRY_SIZE = sizeof(UserTableEntry);
 
-static const Ttl INITIAL_TTL = 40;
+static const Ttl INITIAL_TTL = 24;
 
 static Username ADMIN_DEFAULT_USERNAME = "admin";
 static Password ADMIN_DEFAULT_PASSWORD = "12345";

@@ -22,7 +22,6 @@ private:
     static int message_buffer_index;
     static void processCharacter(char character);
     static void processMessage();
-    static void sendMessage(String message);
 };
 
 #endif // COMMUNICATION_MODULE
