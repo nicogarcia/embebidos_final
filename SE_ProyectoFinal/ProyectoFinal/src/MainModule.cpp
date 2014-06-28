@@ -68,13 +68,11 @@ void MainModule::initialize() {
     strcpy(inputs[2] , ADMIN_DEFAULT_PASSWORD);
     RequestModule::serveRequest(inputs);
 
-    /*
-        strcpy(inputs[0] , "0"); // ADD_USER
-        strcpy(inputs[1] , ADMIN_DEFAULT_USERNAME);
-        strcpy(inputs[2] , "lala");
-        strcpy(inputs[3] , "lala");
-        RequestModule::serveRequest(inputs);
-    	*/
+    /*strcpy(inputs[0] , "0"); // ADD_USER
+    strcpy(inputs[1] , ADMIN_DEFAULT_USERNAME);
+    strcpy(inputs[2] , "lala");
+    strcpy(inputs[3] , "lala");
+    RequestModule::serveRequest(inputs);*/
 
     strcpy(inputs[0] , "7"); // REQUEST_USERS
     strcpy(inputs[1] , ADMIN_DEFAULT_USERNAME);

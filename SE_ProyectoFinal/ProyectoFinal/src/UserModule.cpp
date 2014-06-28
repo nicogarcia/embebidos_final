@@ -71,7 +71,6 @@ void UserModule::initialize() {
         // There are no users: adds a default administrator
         addUser(ADMIN_DEFAULT_USERNAME, ADMIN_DEFAULT_PASSWORD, ADMIN);
     }
-
 }
 
 bool UserModule::isLoginTableFull() {
