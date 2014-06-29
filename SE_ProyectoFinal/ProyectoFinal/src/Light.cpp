@@ -31,12 +31,12 @@ void Light::turnOff() {
     is_off = true;
 
     // Turns the light off
-    digitalWrite(DIGITAL_PIN_LIGHT, HIGH);
+    digitalWrite(DIGITAL_PIN_LIGHT, LOW);
 }
 
 void Light::turnOn() {
     is_off = false;
 
     // Turns the light on
-    digitalWrite(DIGITAL_PIN_LIGHT, LOW);
+    digitalWrite(DIGITAL_PIN_LIGHT, HIGH);
 }

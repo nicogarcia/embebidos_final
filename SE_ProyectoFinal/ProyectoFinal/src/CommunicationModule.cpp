@@ -113,7 +113,7 @@ void CommunicationModule::initialize() {
     Serial.begin(BAUD_RATE_MONITOR_INTERFACE);
 
     // Clears the input serial buffer
-    while (Serial.available() > 0)
+    while(Serial.available() > 0)
         Serial.read();
 
     Serial.println("Hello from SISAD");
@@ -122,9 +122,15 @@ void CommunicationModule::initialize() {
 }
 
 void CommunicationModule::readRequest() {
-    while (bluetoothInterface.available() > 0)
+#ifdef SERIAL_DEBUG_MODE
+    while(Serial.available() > 0)
+// There are characters unread
+        processCharacter(Serial.read());
+#else //SERIAL_DEBUG_MODE	
+    while(bluetoothInterface.available() > 0)
         // There are characters unread
         processCharacter(bluetoothInterface.read());
+#endif
 }
 
 void CommunicationModule::sendErrorResponse(OutputParameter error_parameter) {
@@ -218,7 +224,7 @@ void CommunicationModule::sendRequestUsersResponse(int user_count, Username user
     bluetoothInterface.print(response);
     bluetoothInterface.print(MESSAGE_INPUTS_SEPARATOR);
     bluetoothInterface.print(user_count);
-    forn (i, user_count) {
+    forn(i, user_count) {
         bluetoothInterface.print(MESSAGE_INPUTS_SEPARATOR);
         bluetoothInterface.print(usernames[i]);
     }
@@ -230,7 +236,7 @@ void CommunicationModule::sendRequestUsersResponse(int user_count, Username user
     Serial.print(response);
     Serial.print(MESSAGE_INPUTS_SEPARATOR);
     Serial.print(user_count);
-    forn (i, user_count) {
+    forn(i, user_count) {
         Serial.print(MESSAGE_INPUTS_SEPARATOR);
         Serial.print(usernames[i]);
     }
@@ -261,46 +267,46 @@ void CommunicationModule::processCharacter(char character) {
     switch(character) {
     case MESSAGE_BEGIN : {
 #ifdef DEBUG_MODE
-        Serial.print("R: ");
-        Serial.print(character);
+            Serial.print("R: ");
+            Serial.print(character);
 #endif // DEBUG_MODE
 
-        ignore_message = false;
-        message_buffer_index = 0; // Clears the buffer
-        break;
-    }
+            ignore_message = false;
+            message_buffer_index = 0; // Clears the buffer
+            break;
+        }
 
     case MESSAGE_END : {
 #ifdef DEBUG_MODE
-        Serial.println(character);
-        Serial.flush();
+            Serial.println(character);
+            Serial.flush();
 #endif // DEBUG_MODE
 
-        if (! ignore_message) {
-            // Ignores characters until a MESSAGE_BEGIN is received
-            ignore_message = true;
+            if(! ignore_message) {
+                // Ignores characters until a MESSAGE_BEGIN is received
+                ignore_message = true;
 
-            // Processes the message
-            processMessage();
+                // Processes the message
+                processMessage();
+            }
+
+            break;
         }
-
-        break;
-    }
 
     default : {
 #ifdef DEBUG_MODE
-        Serial.print(character);
+            Serial.print(character);
 #endif // DEBUG_MODE
 
-        if (! ignore_message) {
-            if (message_buffer_index == INPUT_MESSAGE_MAX_LENGTH)
-                // The buffer is full
-                ignore_message = true;
-            else
-                // Buffers the character
-                message_buffer[message_buffer_index++] = character;
+            if(! ignore_message) {
+                if(message_buffer_index == INPUT_MESSAGE_MAX_LENGTH)
+                    // The buffer is full
+                    ignore_message = true;
+                else
+                    // Buffers the character
+                    message_buffer[message_buffer_index++] = character;
+            }
         }
-    }
     }
 }
 
@@ -309,17 +315,17 @@ void CommunicationModule::processMessage() {
     int input_lengths[INPUT_MAX_COUNT];
 
     // Initializes the input lengths
-    forn (i, INPUT_MAX_COUNT) {
+    forn(i, INPUT_MAX_COUNT) {
         input_lengths[i] = 0;
     }
 
     int input_length = 0;
     int inputs_index = 0;
-    forn (i, message_buffer_index) {
+    forn(i, message_buffer_index) {
         // Reads a character from the message buffer
         char character = message_buffer[i];
 
-        if (character == MESSAGE_INPUTS_SEPARATOR) {
+        if(character == MESSAGE_INPUTS_SEPARATOR) {
             // The character is a separator
 
             // Adds the input length
@@ -328,13 +334,13 @@ void CommunicationModule::processMessage() {
             inputs_index++;
             input_length = 0;
 
-            if (inputs_index == INPUT_MAX_COUNT) {
+            if(inputs_index == INPUT_MAX_COUNT) {
                 // There are too many inputs
                 sendErrorResponse(INVALID_INPUT);
                 return;
             }
         } else {
-            if (input_length == INPUT_MAX_LENGTH) {
+            if(input_length == INPUT_MAX_LENGTH) {
                 // The input is too long
                 sendErrorResponse(INVALID_INPUT);
                 return;
@@ -349,7 +355,7 @@ void CommunicationModule::processMessage() {
     input_lengths[inputs_index] = input_length;
 
     // Appends a null character to the inputs
-    forn (i, INPUT_MAX_COUNT) {
+    forn(i, INPUT_MAX_COUNT) {
         inputs[i][input_lengths[i]] = '\0';
     }
 

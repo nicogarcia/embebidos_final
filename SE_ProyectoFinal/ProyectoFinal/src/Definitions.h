@@ -2,7 +2,8 @@
 #define DEFINITIONS
 
 #define DEBUG_MODE
-#define EEPROM_INITIALIZATION_MODE
+//#define EEPROM_INITIALIZATION_MODE
+//#define SERIAL_DEBUG_MODE
 
 #include <Arduino.h>
 #include "SoftwareSerial.h"
@@ -104,7 +105,7 @@ enum Roles {
 
 static const uint8_t ANALOG_PIN_LIGHT_SENSOR = 3;
 static const uint8_t DIGITAL_PIN_DHT_SENSOR = 2;
-static const uint8_t DIGITAL_PIN_LIGHT = 13;
+static const uint8_t DIGITAL_PIN_LIGHT = 11;
 static const uint8_t DIGITAL_PIN_LOCK = 12;
 static const uint8_t DIGITAL_PIN_SOFTWARE_SERIAL_RECEPTION = 7;
 static const uint8_t DIGITAL_PIN_SOFTWARE_SERIAL_TRANSMISSION = 6;
@@ -140,7 +141,7 @@ static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
     // Milliseconds
     // The order of the elements is important
     2000, // DHT_MEASUREMENT
-    1000, // LIGHT_INTENSITY_MEASUREMENT
+    200, // LIGHT_INTENSITY_MEASUREMENT
     5000 // TTL_EXPIRATION
 };
 

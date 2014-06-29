@@ -16,28 +16,28 @@ void MainModule::checkEvent() {
     // Get's the current time
     Time current_time = millis();
 
-    if (event_times[current_event] > current_time)
+    if(event_times[current_event] > current_time)
         // The timer overflowed
         event_times[current_event] = 0;
 
-    if (current_time - event_times[current_event] > EVENT_CHECK_PERIODS[current_event]) {
+    if(current_time - event_times[current_event] > EVENT_CHECK_PERIODS[current_event]) {
         // It's time to check the current event
 
         switch(current_event) {
         case DHT_MEASUREMENT : {
-            dhtMeasurementEvent();
-            break;
-        }
+                dhtMeasurementEvent();
+                break;
+            }
 
         case LIGHT_INTENSITY_MEASUREMENT : {
-            lightIntensityMeasurementEvent();
-            break;
-        }
+                lightIntensityMeasurementEvent();
+                break;
+            }
 
         case TTL_EXPIRATION : {
-            ttlExpirationEvent();
-            break;
-        }
+                ttlExpirationEvent();
+                break;
+            }
         }
 
         // Sets the current time as the current event time
@@ -46,6 +46,7 @@ void MainModule::checkEvent() {
 
     // Sets the next event
     current_event = (current_event + 1) % EVENT_COUNT;
+    CommunicationModule::debug();
 }
 
 void MainModule::initialize() {
@@ -55,12 +56,12 @@ void MainModule::initialize() {
     UserModule::initialize();
 
     // Initializes the event times
-    forn (i, EVENT_COUNT) {
+    forn(i, EVENT_COUNT) {
         event_times[i] = 0;
     }
 
 #ifdef DEBUG_MODE
-    CommunicationModule::debug();
+    //CommunicationModule::debug();
 #endif // DEBUG_MODE
 }
 
@@ -73,13 +74,13 @@ void MainModule::lightIntensityMeasurementEvent() {
     // Measures the light intensity
     StateModule::measureLightIntensity();
 
-    if (! StateModule::isLightDisabled()) {
+    if(! StateModule::isLightDisabled()) {
         // Light is enabled
 
         // Gets the light intensity
         LightIntensity light_intensity = StateModule::getLightIntensityAverage();
 
-        if (light_intensity < LIGHT_INTENSITY_AVERAGE_THRESHOLD)
+        if(light_intensity < LIGHT_INTENSITY_AVERAGE_THRESHOLD)
             // The environment is too dark
             StateModule::turnOnLight();
         else
