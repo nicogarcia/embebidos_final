@@ -2,8 +2,7 @@
 #define DEFINITIONS
 
 #define DEBUG_MODE
-//#define EEPROM_INITIALIZATION_MODE
-//#define SERIAL_DEBUG_MODE
+#define EEPROM_INITIALIZATION_MODE
 
 #include <Arduino.h>
 #include "SoftwareSerial.h"
@@ -59,6 +58,7 @@ enum Events {
     // The order of the elements is important
     DHT_MEASUREMENT,
     LIGHT_INTENSITY_MEASUREMENT,
+    LOCK_CLOSING,
     TTL_EXPIRATION,
     EVENT_COUNT // This element should always be kept in the last position
 };
@@ -142,6 +142,7 @@ static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
     // The order of the elements is important
     2000, // DHT_MEASUREMENT
     200, // LIGHT_INTENSITY_MEASUREMENT
+    5000, // LOCK_CLOSING
     5000 // TTL_EXPIRATION
 };
 

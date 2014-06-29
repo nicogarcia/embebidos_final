@@ -1,7 +1,10 @@
 #include "StateModule.h"
 
 void StateModule::closeLock() {
-    return Lock::close();
+    Lock::close();
+
+    // Resets the lock closing event time
+    MainModule::resetEventTime(LOCK_CLOSING);
 }
 
 void StateModule::disableLight() {
@@ -59,7 +62,7 @@ void StateModule::measureTemperatureAndHumidity() {
 }
 
 void StateModule::openLock() {
-    return Lock::open();
+    Lock::open();
 }
 
 void StateModule::toggleLight() {
