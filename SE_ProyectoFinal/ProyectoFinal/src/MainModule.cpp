@@ -102,7 +102,7 @@ void MainModule::lockClosingEvent() {
     if (! StateModule::isLockClosed())
         // The lock is opened
         // Closes the lock
-        StateModule::closeLock();
+        StateModule::toggleLock();
 }
 
 void MainModule::ttlExpirationEvent() {

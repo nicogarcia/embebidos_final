@@ -23,7 +23,7 @@ void CommunicationModule::debug() {
     // $1*
     // $1*
     // $1#7*
-    char message[] = "$2#admin#12345*$1#admin#admin*$3#admin*$2#admin#admin*";
+    //char message[] = "$2#admin#12345*$1#admin#admin*$3#admin*$2#admin#admin*";
 
     // Example 2
     //
@@ -92,12 +92,12 @@ void CommunicationModule::debug() {
     // $1#3#user0#user2#user1*
     //char message[] = "$2#admin#12345*$0#admin#user0#pwd*$0#admin#user1#pwd*$0#admin#user2#pwd*$5#admin#user1*$5#admin#user1*$0#admin#user2#pwd*$0#admin#user1#pwd*$7#admin*";
 
-
-    int length = strlen(message);
-    forn (i, length) {
-        processCharacter(message[i]);
-    }
-
+    /*
+        int length = strlen(message);
+        forn (i, length) {
+            processCharacter(message[i]);
+        }
+    */
 }
 #endif // DEBUG_MODE
 

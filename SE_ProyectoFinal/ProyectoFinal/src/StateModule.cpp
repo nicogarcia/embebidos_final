@@ -1,17 +1,5 @@
 #include "StateModule.h"
 
-void StateModule::closeLock() {
-    Lock::close();
-}
-
-void StateModule::disableLight() {
-    Light::disable();
-}
-
-void StateModule::enableLight() {
-    Light::enable();
-}
-
 Humidity StateModule::getHumidity() {
     return DhtSensor::getHumidity();
 }
@@ -32,10 +20,10 @@ void StateModule::initialize() {
     Lock::initialize();
 
     // State initialization tasks
-    closeLock();
-    disableLight();
-    measureLightIntensity();
-    measureTemperatureAndHumidity();
+    DhtSensor::measure();
+    Light::disable();
+    LightSensor::measure();
+    Lock::close();
 }
 
 bool StateModule::isLightDisabled() {
@@ -58,13 +46,6 @@ void StateModule::measureTemperatureAndHumidity() {
     DhtSensor::measure();
 }
 
-void StateModule::openLock() {
-    Lock::open();
-
-    // Resets the lock closing event time
-    MainModule::resetEventTime(LOCK_CLOSING);
-}
-
 void StateModule::toggleLight() {
     if (Light::isDisabled())
         // The light is disabled
@@ -75,10 +56,13 @@ void StateModule::toggleLight() {
 }
 
 void StateModule::toggleLock() {
-    if (Lock::isClosed())
+    if (Lock::isClosed()) {
         // The lock is closed
         Lock::open();
-    else
+
+        // Resets the lock closing event time
+        MainModule::resetEventTime(LOCK_CLOSING);
+    } else
         // The lock is opened
         Lock::close();
 }
