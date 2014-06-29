@@ -2,9 +2,6 @@
 
 void StateModule::closeLock() {
     Lock::close();
-
-    // Resets the lock closing event time
-    MainModule::resetEventTime(LOCK_CLOSING);
 }
 
 void StateModule::disableLight() {
@@ -63,23 +60,26 @@ void StateModule::measureTemperatureAndHumidity() {
 
 void StateModule::openLock() {
     Lock::open();
+
+    // Resets the lock closing event time
+    MainModule::resetEventTime(LOCK_CLOSING);
 }
 
 void StateModule::toggleLight() {
     if (Light::isDisabled())
-        // Light is disabled
+        // The light is disabled
         Light::enable();
     else
-        // Light is enabled
+        // The light is enabled
         Light::disable();
 }
 
 void StateModule::toggleLock() {
     if (Lock::isClosed())
-        // Lock is closed
+        // The lock is closed
         Lock::open();
     else
-        // Lock is opened
+        // The lock is opened
         Lock::close();
 }
 

@@ -84,7 +84,7 @@ void MainModule::lightIntensityMeasurementEvent() {
     StateModule::measureLightIntensity();
 
     if (! StateModule::isLightDisabled()) {
-        // Light is enabled
+        // The light is enabled
 
         // Gets the light intensity
         LightIntensity light_intensity = StateModule::getLightIntensityAverage();
@@ -99,8 +99,10 @@ void MainModule::lightIntensityMeasurementEvent() {
 }
 
 void MainModule::lockClosingEvent() {
-    // Closes the lock
-    StateModule::closeLock();
+    if (! StateModule::isLockClosed())
+        // The lock is opened
+        // Closes the lock
+        StateModule::closeLock();
 }
 
 void MainModule::ttlExpirationEvent() {
