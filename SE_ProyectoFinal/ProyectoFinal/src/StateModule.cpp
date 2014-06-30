@@ -47,7 +47,7 @@ void StateModule::measureTemperatureAndHumidity() {
 }
 
 void StateModule::toggleLight() {
-    if (Light::isDisabled())
+    if(Light::isDisabled())
         // The light is disabled
         Light::enable();
     else
@@ -56,7 +56,7 @@ void StateModule::toggleLight() {
 }
 
 void StateModule::toggleLock() {
-    if (Lock::isClosed()) {
+    if(Lock::isClosed()) {
         // The lock is closed
         Lock::open();
 

@@ -4,7 +4,7 @@ LoginTableEntry LoginTable::entries[CAPACITY_LOGIN_TABLE];
 uint8_t LoginTable::length;
 
 void LoginTable::addEntry(Username username, Ttl ttl) {
-    if (length == CAPACITY_LOGIN_TABLE)
+    if(length == CAPACITY_LOGIN_TABLE)
         // The table is full
         return;
 
@@ -22,7 +22,7 @@ LoginTableEntry *LoginTable::getEntry(Username username) {
     // Searches for the entry index
     int index = getEntryIndex(username);
 
-    if (index < 0)
+    if(index < 0)
         // The entry has not been found
         return NULL;
 
@@ -31,8 +31,8 @@ LoginTableEntry *LoginTable::getEntry(Username username) {
 
 int LoginTable::getEntryIndex(Username username) {
     // Searches for the entry
-    forn (i, length) {
-        if (strcmp(username, entries[i].username) == 0)
+    forn(i, length) {
+        if(strcmp(username, entries[i].username) == 0)
             // The entry has been found
             return i;
     }
@@ -58,7 +58,7 @@ bool LoginTable::isFull() {
 }
 
 void LoginTable::removeEntry(int index) {
-    if (index < 0 || index >= CAPACITY_LOGIN_TABLE)
+    if(index < 0 || index >= CAPACITY_LOGIN_TABLE)
         // Invalid index
         return;
 
@@ -73,7 +73,7 @@ void LoginTable::removeEntry(Username username) {
     // Searches for the entry index
     int index = getEntryIndex(username);
 
-    if (index < 0)
+    if(index < 0)
         // The entry has not been found
         return;
 

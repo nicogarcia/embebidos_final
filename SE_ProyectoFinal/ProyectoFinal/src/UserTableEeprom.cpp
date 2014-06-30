@@ -8,7 +8,7 @@ uint8_t UserTableEeprom::readEntries(UserTableEntry entries[CAPACITY_USER_TABLE]
     uint16_t base_address = USER_TABLE_EEPROM_ENTRIES_ADDRESS;
 
     // Reads the entries
-    forn (i, length) {
+    forn(i, length) {
         // Reads the username
         eeprom_read_block(entries[i].username, (void *) base_address, sizeof(entries[i].username));
 

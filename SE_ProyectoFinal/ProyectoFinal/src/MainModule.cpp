@@ -16,33 +16,33 @@ void MainModule::checkEvent() {
     // Get's the current time
     Time current_time = millis();
 
-    if (event_times[current_event] > current_time)
+    if(event_times[current_event] > current_time)
         // The timer overflowed
         event_times[current_event] = 0;
 
-    if (current_time - event_times[current_event] > EVENT_CHECK_PERIODS[current_event]) {
+    if(current_time - event_times[current_event] > EVENT_CHECK_PERIODS[current_event]) {
         // It's time to check the current event
 
         switch(current_event) {
         case LOCK_CLOSING : {
-            lockClosingEvent();
-            break;
-        }
+                lockClosingEvent();
+                break;
+            }
 
         case DHT_MEASUREMENT : {
-            dhtMeasurementEvent();
-            break;
-        }
+                dhtMeasurementEvent();
+                break;
+            }
 
         case LIGHT_INTENSITY_MEASUREMENT : {
-            lightIntensityMeasurementEvent();
-            break;
-        }
+                lightIntensityMeasurementEvent();
+                break;
+            }
 
         case TTL_EXPIRATION : {
-            ttlExpirationEvent();
-            break;
-        }
+                ttlExpirationEvent();
+                break;
+            }
         }
 
         // Sets the current time as the current event time
@@ -60,7 +60,7 @@ void MainModule::initialize() {
     UserModule::initialize();
 
     // Initializes the event times
-    forn (i, EVENT_COUNT) {
+    forn(i, EVENT_COUNT) {
         event_times[i] = 0;
     }
 
@@ -83,13 +83,13 @@ void MainModule::lightIntensityMeasurementEvent() {
     // Measures the light intensity
     StateModule::measureLightIntensity();
 
-    if (! StateModule::isLightDisabled()) {
+    if(! StateModule::isLightDisabled()) {
         // The light is enabled
 
         // Gets the light intensity
         LightIntensity light_intensity = StateModule::getLightIntensityAverage();
 
-        if (light_intensity < LIGHT_INTENSITY_AVERAGE_THRESHOLD)
+        if(light_intensity < LIGHT_INTENSITY_AVERAGE_THRESHOLD)
             // The environment is too dark
             StateModule::turnOnLight();
         else
@@ -99,7 +99,7 @@ void MainModule::lightIntensityMeasurementEvent() {
 }
 
 void MainModule::lockClosingEvent() {
-    if (! StateModule::isLockClosed())
+    if(! StateModule::isLockClosed())
         // The lock is opened
         // Closes the lock
         StateModule::toggleLock();

@@ -4,7 +4,7 @@ UserTableEntry UserTable::entries[CAPACITY_USER_TABLE];
 uint8_t UserTable::length;
 
 void UserTable::addEntry(Username username, Password password, Role role) {
-    if (length == CAPACITY_USER_TABLE)
+    if(length == CAPACITY_USER_TABLE)
         // The table is full
         return;
 
@@ -27,7 +27,7 @@ UserTableEntry *UserTable::getEntry(Username username) {
     // Searches for the entry index
     int index = getEntryIndex(username);
 
-    if (index < 0)
+    if(index < 0)
         // The entry has not been found
         return NULL;
 
@@ -36,8 +36,8 @@ UserTableEntry *UserTable::getEntry(Username username) {
 
 int UserTable::getEntryIndex(Username username) {
     // Searches for the entry
-    forn (i, length) {
-        if (strcmp(username, entries[i].username) == 0)
+    forn(i, length) {
+        if(strcmp(username, entries[i].username) == 0)
             // The entry has been found
             return i;
     }
@@ -69,7 +69,7 @@ bool UserTable::isFull() {
 }
 
 void UserTable::removeEntry(int index) {
-    if (index < 0 || index >= CAPACITY_USER_TABLE)
+    if(index < 0 || index >= CAPACITY_USER_TABLE)
         // Invalid index
         return;
 
@@ -86,7 +86,7 @@ void UserTable::removeEntry(Username username) {
     // Searches for the entry index
     int index = getEntryIndex(username);
 
-    if (index < 0)
+    if(index < 0)
         // The entry has not been found
         return;
 

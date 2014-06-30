@@ -21,7 +21,7 @@ void LightSensor::measure() {
     // Measures the light intensity
     LightIntensity light_intensity = analogRead(ANALOG_PIN_LIGHT_SENSOR);
 
-    if (LightIntensityQueue::isFull()) {
+    if(LightIntensityQueue::isFull()) {
         // The queue is full
         // Removes the oldest light intensity record
         light_intensity_sum -= LightIntensityQueue::getFront();

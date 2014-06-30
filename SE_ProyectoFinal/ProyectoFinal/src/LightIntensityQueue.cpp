@@ -5,7 +5,7 @@ LightIntensity LightIntensityQueue::light_intensities[LIGHT_INTENSITY_QUEUE_CAPA
 int LightIntensityQueue::tail;
 
 LightIntensity LightIntensityQueue::getBack() {
-    if (isEmpty())
+    if(isEmpty())
         // The queue is empty
         return 0;
 
@@ -13,7 +13,7 @@ LightIntensity LightIntensityQueue::getBack() {
 }
 
 LightIntensity LightIntensityQueue::getFront() {
-    if (isEmpty())
+    if(isEmpty())
         // The queue is empty
         return 0;
 
@@ -21,11 +21,11 @@ LightIntensity LightIntensityQueue::getFront() {
 }
 
 int LightIntensityQueue::getLength() {
-    if (head < 0 || tail < 0)
+    if(head < 0 || tail < 0)
         // The queue is empty
         return 0;
 
-    if (tail < head)
+    if(tail < head)
         return tail - head + 1 + LIGHT_INTENSITY_QUEUE_CAPACITY;
     else
         return tail - head + 1;
@@ -45,11 +45,11 @@ bool LightIntensityQueue::isFull() {
 }
 
 void LightIntensityQueue::pop() {
-    if (isEmpty())
+    if(isEmpty())
         // The queue is empty
         return;
 
-    if (getLength() == 1) {
+    if(getLength() == 1) {
         // The queue has exactly 1 light intensity
         head = -1;
         tail = -1;
@@ -58,11 +58,11 @@ void LightIntensityQueue::pop() {
 }
 
 void LightIntensityQueue::push(LightIntensity light_intensity) {
-    if (isFull())
+    if(isFull())
         // The queue is full
         return;
 
-    if (isEmpty()) {
+    if(isEmpty()) {
         // The queue is empty
         head = 0;
         tail = 0;
