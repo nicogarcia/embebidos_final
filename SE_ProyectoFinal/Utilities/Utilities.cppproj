@@ -4,17 +4,19 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>6.1</ProjectVersion>
     <ToolchainName>com.Atmel.AVRGCC8.CPP</ToolchainName>
-    <ProjectGuid>{d2d7487c-d099-4c6b-abae-0b86c66788f9}</ProjectGuid>
+    <ProjectGuid>{c7777fc5-739f-4c01-82f1-9bf79646f9c6}</ProjectGuid>
     <avrdevice>ATmega328P</avrdevice>
     <avrdeviceseries>none</avrdeviceseries>
-    <OutputType>Executable</OutputType>
+    <OutputType>StaticLibrary</OutputType>
     <Language>CPP</Language>
-    <OutputFileName>$(MSBuildProjectName)</OutputFileName>
-    <OutputFileExtension>.elf</OutputFileExtension>
+    <OutputFileName>lib$(MSBuildProjectName)</OutputFileName>
+    <OutputFileExtension>.a</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
-    <AssemblyName>GccApplication1</AssemblyName>
-    <Name>ProyectoFinal</Name>
-    <RootNamespace>GccApplication1</RootNamespace>
+    <AvrGccProjectExtensions>
+    </AvrGccProjectExtensions>
+    <AssemblyName>Lab2_Library</AssemblyName>
+    <Name>Utilities</Name>
+    <RootNamespace>Lab2_Library</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
@@ -22,7 +24,7 @@
     <ProgFlashFromRam>true</ProgFlashFromRam>
     <RamSnippetAddress>0x20000000</RamSnippetAddress>
     <UncachedRange />
-    <OverrideVtorValue>exception_table</OverrideVtorValue>
+    <OverrideVtorValue />
     <BootSegment>2</BootSegment>
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <AsfFrameworkConfig>
@@ -37,21 +39,6 @@
         </dependencies>
       </framework-data>
     </AsfFrameworkConfig>
-    <avrtool>com.atmel.avrdbg.tool.simulator</avrtool>
-    <com_atmel_avrdbg_tool_simulator>
-      <ToolOptions xmlns="">
-        <InterfaceProperties>
-          <JtagEnableExtResetOnStartSession>false</JtagEnableExtResetOnStartSession>
-        </InterfaceProperties>
-        <InterfaceName>
-        </InterfaceName>
-      </ToolOptions>
-      <ToolType xmlns="">com.atmel.avrdbg.tool.simulator</ToolType>
-      <ToolNumber xmlns="">
-      </ToolNumber>
-      <ToolName xmlns="">Simulator</ToolName>
-    </com_atmel_avrdbg_tool_simulator>
-    <avrtoolinterface />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -82,9 +69,15 @@
         <avrgcccpp.compiler.optimization.PackStructureMembers>True</avrgcccpp.compiler.optimization.PackStructureMembers>
         <avrgcccpp.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcccpp.compiler.optimization.AllocateBytesNeededForEnum>
         <avrgcccpp.compiler.warnings.AllWarnings>True</avrgcccpp.compiler.warnings.AllWarnings>
+        <avrgcccpp.linker.libraries.Libraries>
+          <ListValues>
+            <Value>libcoreArduinoUno104.a</Value>
+          </ListValues>
+        </avrgcccpp.linker.libraries.Libraries>
         <avrgcccpp.linker.libraries.LibrarySearchPaths>
           <ListValues>
-            <Value>%25ARDUINO_HOME%25\</Value>
+            <Value>C:\nico\arduino-1.0.4</Value>
+            <Value>C:\nico\embebidos_workspace\embebidos\Lab2\Lab2_Library</Value>
           </ListValues>
         </avrgcccpp.linker.libraries.LibrarySearchPaths>
         <avrgcccpp.linker.memorysettings.Comment>&lt;segmentname&gt;=&lt;address&gt;, for example  .boot=0xff</avrgcccpp.linker.memorysettings.Comment>
@@ -115,7 +108,7 @@
         <avrgcccpp.compiler.symbols.DefSymbols>
           <ListValues>
             <Value>DEBUG</Value>
-            <Value>F_CPU=16000000UL</Value>
+            <Value>F_CPU=16000000</Value>
           </ListValues>
         </avrgcccpp.compiler.symbols.DefSymbols>
         <avrgcccpp.compiler.directories.IncludePaths>
@@ -123,10 +116,9 @@
             <Value>%25ARDUINO_HOME%25\hardware\arduino\cores\arduino</Value>
             <Value>%25ARDUINO_HOME%25\hardware\arduino\variants\standard</Value>
             <Value>%25ARDUINO_HOME%25\libraries\SoftwareSerial</Value>
-            <Value>..\..\Utilities</Value>
-            <Value>..\..\Utilities\sys</Value>
-            <Value>..\..\Utilities\ui</Value>
-            <Value>..\..\Utilities\drv</Value>
+            <Value>../sys</Value>
+            <Value>../drv</Value>
+            <Value>../ui</Value>
           </ListValues>
         </avrgcccpp.compiler.directories.IncludePaths>
         <avrgcccpp.compiler.optimization.level>Optimize (-O1)</avrgcccpp.compiler.optimization.level>
@@ -137,122 +129,85 @@
         <avrgcccpp.linker.libraries.Libraries>
           <ListValues>
             <Value>libcoreArduinoUno104.a</Value>
-            <Value>libSoftwareSerial.a</Value>
           </ListValues>
         </avrgcccpp.linker.libraries.Libraries>
         <avrgcccpp.linker.libraries.LibrarySearchPaths>
           <ListValues>
-            <Value>%25ARDUINO_HOME%25\</Value>
+            <Value>%25ARDUINO_HOME%25</Value>
             <Value>..</Value>
           </ListValues>
         </avrgcccpp.linker.libraries.LibrarySearchPaths>
+        <avrgcccpp.linker.optimization.GarbageCollectUnusedSections>False</avrgcccpp.linker.optimization.GarbageCollectUnusedSections>
         <avrgcccpp.linker.memorysettings.Comment>&lt;segmentname&gt;=&lt;address&gt;, for example  .boot=0xff</avrgcccpp.linker.memorysettings.Comment>
         <avrgcccpp.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcccpp.assembler.debugging.DebugLevel>
       </AvrGccCpp>
     </ToolchainSettings>
-    <OutputFileName>ProyectoFinal</OutputFileName>
-    <OutputFileExtension>.elf</OutputFileExtension>
-    <OutputType>Executable</OutputType>
-    <PostBuildEvent>%ARDUINO_HOME%\hardware\tools\avr\bin\avrdude.exe -C%ARDUINO_HOME%\hardware\tools\avr\etc\avrdude.conf -patmega328p -carduino -P\\.\COM1 -b115200 -Uflash:w:"$(Name).hex":i</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="lib\dht.cpp">
+    <Compile Include="drv\ADCManager.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="lib\dht.h">
+    <Compile Include="drv\ADCManager.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\AuxiliarModule.cpp">
+    <Compile Include="drv\Driver.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\AuxiliarModule.h">
+    <Compile Include="drv\Driver.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\CommunicationModule.cpp">
+    <Compile Include="drv\lcd_keypad_sensor\LCDKeypadDriver.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\CommunicationModule.h">
+    <Compile Include="drv\lcd_keypad_sensor\LCDKeypadDriver.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\Definitions.h">
+    <Compile Include="drv\lcd_keypad_sensor\LCDKeypadKeys.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\DhtSensor.cpp">
+    <Compile Include="drv\lcd_keypad_sensor\LCDKeypadKeys.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\DhtSensor.h">
+    <Compile Include="drv\temp_sensor\TempSensorDriver.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\Light.cpp">
+    <Compile Include="drv\temp_sensor\TempSensorDriver.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\Light.h">
+    <Compile Include="sys\ArrayQueue.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\LightIntensityQueue.cpp">
+    <Compile Include="sys\ArrayQueue.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\LightIntensityQueue.h">
+    <Compile Include="sys\PriorityQueue.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\LightSensor.cpp">
+    <Compile Include="sys\PriorityQueue.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\LightSensor.h">
+    <Compile Include="sys\Dispatcher.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\Lock.cpp">
+    <Compile Include="sys\Dispatcher.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\Lock.h">
+    <Compile Include="sys\Task.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\LoginTable.cpp">
+    <Compile Include="sys\Task.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\LoginTable.h">
+    <Compile Include="ui\LCDUI.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\MainModule.cpp">
+    <Compile Include="ui\LCDUI.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\MainModule.h">
+    <Compile Include="ui\LiquidCrystal.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\RequestModule.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\RequestModule.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\SecurityModule.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\SecurityModule.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\StateModule.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\StateModule.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\UserModule.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\UserModule.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\UserTable.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\UserTable.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\UserTableEeprom.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\UserTableEeprom.h">
+    <Compile Include="ui\LiquidCrystal.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
@@ -260,20 +215,13 @@
     <None Include="libcoreArduinoUno104.a">
       <SubType>compile</SubType>
     </None>
-    <None Include="libSoftwareSerial.a">
-      <SubType>compile</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Utilities\Utilities.cppproj">
-      <Name>Utilities</Name>
-      <Project>{c7777fc5-739f-4c01-82f1-9bf79646f9c6}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="lib" />
-    <Folder Include="src" />
+    <Folder Include="drv" />
+    <Folder Include="drv\lcd_keypad_sensor" />
+    <Folder Include="drv\temp_sensor" />
+    <Folder Include="ui" />
+    <Folder Include="sys" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
