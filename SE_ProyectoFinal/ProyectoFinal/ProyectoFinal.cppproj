@@ -123,10 +123,7 @@
             <Value>%25ARDUINO_HOME%25\hardware\arduino\cores\arduino</Value>
             <Value>%25ARDUINO_HOME%25\hardware\arduino\variants\standard</Value>
             <Value>%25ARDUINO_HOME%25\libraries\SoftwareSerial</Value>
-            <Value>..\..\Utilities</Value>
-            <Value>..\..\Utilities\sys</Value>
-            <Value>..\..\Utilities\ui</Value>
-            <Value>..\..\Utilities\drv</Value>
+            <Value>..\lib\DHTLib</Value>
           </ListValues>
         </avrgcccpp.compiler.directories.IncludePaths>
         <avrgcccpp.compiler.optimization.level>Optimize (-O1)</avrgcccpp.compiler.optimization.level>
@@ -143,7 +140,8 @@
         <avrgcccpp.linker.libraries.LibrarySearchPaths>
           <ListValues>
             <Value>%25ARDUINO_HOME%25\</Value>
-            <Value>..</Value>
+            <Value>..\lib\Arduino</Value>
+            <Value>..\lib\SoftwareSerial</Value>
           </ListValues>
         </avrgcccpp.linker.libraries.LibrarySearchPaths>
         <avrgcccpp.linker.memorysettings.Comment>&lt;segmentname&gt;=&lt;address&gt;, for example  .boot=0xff</avrgcccpp.linker.memorysettings.Comment>
@@ -156,10 +154,10 @@
     <PostBuildEvent>%ARDUINO_HOME%\hardware\tools\avr\bin\avrdude.exe -C%ARDUINO_HOME%\hardware\tools\avr\etc\avrdude.conf -patmega328p -carduino -P\\.\COM1 -b115200 -Uflash:w:"$(Name).hex":i</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="lib\dht.cpp">
+    <Compile Include="lib\DHTLib\dht.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="lib\dht.h">
+    <Compile Include="lib\DHTLib\dht.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\AuxiliarModule.cpp">
@@ -257,22 +255,18 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="libcoreArduinoUno104.a">
+    <None Include="lib\Arduino\libcoreArduinoUno104.a">
       <SubType>compile</SubType>
     </None>
-    <None Include="libSoftwareSerial.a">
+    <None Include="lib\SoftwareSerial\libSoftwareSerial.a">
       <SubType>compile</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Utilities\Utilities.cppproj">
-      <Name>Utilities</Name>
-      <Project>{c7777fc5-739f-4c01-82f1-9bf79646f9c6}</Project>
-      <Private>True</Private>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="lib" />
+    <Folder Include="lib\DHTLib" />
+    <Folder Include="lib\Arduino" />
+    <Folder Include="lib\SoftwareSerial" />
     <Folder Include="src" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />

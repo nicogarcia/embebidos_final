@@ -93,10 +93,10 @@ void CommunicationModule::debug() {
     //char message[] = "$2#admin#12345*$0#admin#user0#pwd*$0#admin#user1#pwd*$0#admin#user2#pwd*$5#admin#user1*$5#admin#user1*$0#admin#user2#pwd*$0#admin#user1#pwd*$7#admin*";
 
     /*
-        int length = strlen(message);
-        forn (i, length) {
-            processCharacter(message[i]);
-        }
+    int length = strlen(message);
+    forn(i, length) {
+        processCharacter(message[i]);
+    }
     */
 }
 #endif // DEBUG_MODE

@@ -5,9 +5,9 @@
 //#define EEPROM_INITIALIZATION_MODE
 
 #include <Arduino.h>
-#include "SoftwareSerial.h"
 #include <avr/eeprom.h>
-#include "../lib/dht.h"
+#include <dht.h>
+#include <SoftwareSerial.h>
 
 #define forn(i, n) for (int i = 0; i < (int) (n); ++i)
 #define forsn(i, s, n) for (int i = (int) (s); i < (int) (n); ++i)
