@@ -146,7 +146,6 @@ static const Time EVENT_CHECK_PERIODS[EVENT_COUNT] = {
     5000 // TTL_EXPIRATION
 };
 
-#include "AuxiliarModule.h"
 #include "CommunicationModule.h"
 #include "DhtSensor.h"
 #include "Light.h"

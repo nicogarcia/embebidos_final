@@ -15,7 +15,7 @@ private:
     static void removeUser(Username username);
     static void requestState();
     static void requestUsers();
-    static void serveRequestSafely(Request request, Input input_parameters[INPUT_PARAMETER_MAX_COUNT]);
+    static void serveRequest(Request request, Input input_parameters[INPUT_PARAMETER_MAX_COUNT]);
     static void toggleLight();
     static void toggleLock();
 };

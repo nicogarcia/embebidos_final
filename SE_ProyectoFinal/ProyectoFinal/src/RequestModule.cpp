@@ -2,7 +2,7 @@
 
 void RequestModule::serveRequest(Input inputs[INPUT_MAX_COUNT]) {
     // Validates the request
-    if(! AuxiliarModule::isValidRequest(inputs[0])) {
+    if(! SecurityModule::isValidRequest(inputs[0])) {
         // The request is invalid
         CommunicationModule::sendErrorResponse(INVALID_INPUT);
         return;
@@ -12,7 +12,7 @@ void RequestModule::serveRequest(Input inputs[INPUT_MAX_COUNT]) {
     Request request = atoi(inputs[0]);
 
     // Validates the petitioner username
-    if(! AuxiliarModule::isValidUsername(inputs[1])) {
+    if(! SecurityModule::isValidUsername(inputs[1])) {
         // The petitioner username is invalid
         CommunicationModule::sendErrorResponse(INVALID_INPUT);
         return;
@@ -29,12 +29,12 @@ void RequestModule::serveRequest(Input inputs[INPUT_MAX_COUNT]) {
         break;
 
     case ADD_USER : {
-            if(! AuxiliarModule::isValidUsername(inputs[2])) {
+            if(! SecurityModule::isValidUsername(inputs[2])) {
                 CommunicationModule::sendErrorResponse(INVALID_INPUT);
                 return;
             }
 
-            if(! AuxiliarModule::isValidPassword(inputs[3])) {
+            if(! SecurityModule::isValidPassword(inputs[3])) {
                 CommunicationModule::sendErrorResponse(INVALID_INPUT);
                 return;
             }
@@ -43,7 +43,7 @@ void RequestModule::serveRequest(Input inputs[INPUT_MAX_COUNT]) {
         }
 
     case CHANGE_PASSWORD : {
-            if(! AuxiliarModule::isValidPassword(inputs[2])) {
+            if(! SecurityModule::isValidPassword(inputs[2])) {
                 CommunicationModule::sendErrorResponse(INVALID_INPUT);
                 return;
             }
@@ -52,7 +52,7 @@ void RequestModule::serveRequest(Input inputs[INPUT_MAX_COUNT]) {
         }
 
     case LOGIN : {
-            if(! AuxiliarModule::isValidPassword(inputs[2])) {
+            if(! SecurityModule::isValidPassword(inputs[2])) {
                 CommunicationModule::sendErrorResponse(INVALID_INPUT);
                 return;
             }
@@ -61,7 +61,7 @@ void RequestModule::serveRequest(Input inputs[INPUT_MAX_COUNT]) {
         }
 
     case REMOVE_USER : {
-            if(! AuxiliarModule::isValidUsername(inputs[2])) {
+            if(! SecurityModule::isValidUsername(inputs[2])) {
                 CommunicationModule::sendErrorResponse(INVALID_INPUT);
                 return;
             }
@@ -77,7 +77,7 @@ void RequestModule::serveRequest(Input inputs[INPUT_MAX_COUNT]) {
     }
 
     // Serves the request safely
-    serveRequestSafely(request, &inputs[1]);
+    serveRequest(request, &inputs[1]);
 }
 
 void RequestModule::addUser(Username username, Password password) {
@@ -179,7 +179,7 @@ void RequestModule::requestUsers() {
     CommunicationModule::sendRequestUsersResponse(user_count, usernames);
 }
 
-void RequestModule::serveRequestSafely(Request request, Input input_parameters[INPUT_PARAMETER_MAX_COUNT]) {
+void RequestModule::serveRequest(Request request, Input input_parameters[INPUT_PARAMETER_MAX_COUNT]) {
     // Authorizes the request
     if(! SecurityModule::authorizeRequest(request, input_parameters)) {
         // The request has not been authorized
