@@ -1,7 +1,7 @@
 #ifndef DEFINITIONS
 #define DEFINITIONS
 
-#define DEBUG_MODE
+//#define DEBUG_MODE
 //#define EEPROM_INITIALIZATION_MODE
 
 #include <Arduino.h>
